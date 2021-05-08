@@ -1,4 +1,4 @@
-GLOBAL cpuVendor
+GLOBAL cpuVendor, accessClock
 
 section .text
 	
@@ -21,6 +21,20 @@ cpuVendor:
 	mov rax, rdi
 
 	pop rbx
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+accessClock: ; unsigned int accessClock(unsigned char mode)
+	push rbp
+	mov rbp, rsp
+
+	mov al, 0x09
+	out 70h, al
+	xor rax, rax
+	in ax, 71h
+
 
 	mov rsp, rbp
 	pop rbp

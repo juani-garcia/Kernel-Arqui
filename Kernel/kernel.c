@@ -1,8 +1,10 @@
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <clock.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -82,6 +84,8 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	ncPrintAtt("Arquitectura de las Computadoras", 2, 15, 1);
+	ncNewline();
 	ncPrint("[Kernel Main]");
 	ncNewline();
 	ncPrint("  Sample code module at 0x");
@@ -100,5 +104,9 @@ int main()
 	ncNewline();
 
 	ncPrint("[Finished]");
+	ncNewline();
+	ncPrintDec(seconds());
+	ncNewline();
+	ncPrint("Termine!! Igual no ando, que esperabas?");
 	return 0;
 }

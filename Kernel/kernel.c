@@ -106,7 +106,9 @@ int main()
 	ncPrint("[Finished]");
 	ncNewline();
 	ncPrintDec(seconds());
-	ncNewline();
+	for(int i = 0; i < 10; i++){
+		ncNewline();
+	}
 	ncPrint("Termine!! Igual no ando, que esperabas?");
 	return 0;
 }

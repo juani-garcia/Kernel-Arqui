@@ -46,12 +46,12 @@ void ncPrintAtt(const char * string, char frontColor, char backColor, char blink
 
 void ncPrintChar(char character)
 {
-	check();
 	ncPrintCharAtt(character, 0x07);
 }
 
 void ncPrintCharAtt(char character, char attribute)
 {
+	check();
 	*currentVideo = character;
 	*(currentVideo + 1) = attribute;
 	currentVideo += 2;

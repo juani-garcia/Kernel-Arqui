@@ -9,3 +9,7 @@
 
 #Object files
 *.o
+
+#VS Code and WSL stuff
+*settings.json
+*.bash_history

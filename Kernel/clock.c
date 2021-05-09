@@ -1,29 +1,46 @@
 #include <clock.h>
 
-#define WRITE_TO 0x70
-#define READ_FROM 0x71
 #define SECONDS 0x00
 #define MINUTES 0x02
 #define HOURS 0x04
+#define DAYS 0x07
+#define MONTH 0x08
 #define YEAR 0x09
+#define TIME_ZONE -3
 
-unsigned int accessClock(unsigned char mode);
+
+unsigned char accessClock(unsigned char mode);
+static unsigned int decode(unsigned char time);
+
 unsigned int seconds()
 {
-    return accessClock(SECONDS);
+    return decode(accessClock(SECONDS));
 }
 
 unsigned int minutes()
 {
-    return accessClock(MINUTES);
+    return decode(accessClock(MINUTES));
 }
 
 unsigned int hours()
 {
-    return accessClock(HOURS);
+    return decode(accessClock(HOURS)) + TIME_ZONE;
+}
+
+unsigned int day(){
+    return decode(accessClock(DAYS));
+}
+
+unsigned int month(){
+    return decode(accessClock(MONTH));
 }
 
 unsigned int year()
 {
-    return accessClock(YEAR);
+    return decode(accessClock(YEAR));
+}
+
+static unsigned int decode(unsigned char time)
+{
+    return (time >> 4) * 10 + (time & 0x0F);
 }

@@ -84,6 +84,7 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	ncClear();
 	ncPrintAtt("Arquitectura de las Computadoras", 2, 15, 1);
 	ncNewline();
 	ncPrint("[Kernel Main]");
@@ -105,10 +106,23 @@ int main()
 
 	ncPrint("[Finished]");
 	ncNewline();
+	ncPrint("Date: ");
+	ncPrintDec(day()); ncPrintChar('/'); ncPrintDec(month()); ncPrintChar('/'); ncPrintDec(year());
+	ncNewline();
+	ncPrint("Time: ");
+	ncPrintDec(hours());
+	ncPrintChar(':');
+	ncPrintDec(minutes());
+	ncPrintChar(':');
 	ncPrintDec(seconds());
-	for(int i = 0; i < 10; i++){
-		ncNewline();
-	}
-	ncPrint("Termine!! Igual no ando, que esperabas?");
+	ncNewline();
+	ncNewline();
+    ncPrint("Esperando tecla...");
+               
+    int tecla = getKey();
+	ncNewline();
+	ncPrint("Tecla recibida: "); ncPrintHex(tecla);
+	ncPrint(" || "); ncPrintChar(tecla);
+    
 	return 0;
 }

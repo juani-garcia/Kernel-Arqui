@@ -7,6 +7,8 @@ unsigned int hours();
 unsigned int year();
 unsigned int day();
 unsigned int month();
+void timeToStr(char * dest);
+void dateToStr(char * dest);
 
 #endif
 

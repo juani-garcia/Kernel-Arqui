@@ -5,6 +5,8 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <clock.h>
+#include <interrupts.h>
+#include <time.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -106,23 +108,26 @@ int main()
 
 	ncPrint("[Finished]");
 	ncNewline();
-	ncPrint("Date: ");
-	ncPrintDec(day()); ncPrintChar('/'); ncPrintDec(month()); ncPrintChar('/'); ncPrintDec(year());
-	ncNewline();
-	ncPrint("Time: ");
-	ncPrintDec(hours());
-	ncPrintChar(':');
-	ncPrintDec(minutes());
-	ncPrintChar(':');
-	ncPrintDec(seconds());
-	ncNewline();
-	ncNewline();
-    ncPrint("Esperando tecla...");
-               
-    int tecla = getKey();
-	ncNewline();
-	ncPrint("Tecla recibida: "); ncPrintHex(tecla);
-	ncPrint(" || "); ncPrintChar(tecla);
+	char date[9] = {0};
+	dateToStr(date);
+	char time[9] = {0};
+	timeToStr(time);
+	ncPrint(date); ncPrint("; "); ncPrint(time);
+
+	load_idt();
+	uint8_t  changeDetected = 0;
+
+	while(1){
+		if(!changeDetected && ticks_elapsed() % (18 * 5) == 0){
+			changeDetected = 1;
+			ncErase(18);
+			timeToStr(time);
+			dateToStr(date);
+			ncPrint(date); ncPrint("; "); ncPrint(time);
+		}
+		if(changeDetected && ticks_elapsed() % (18 * 5) != 0)
+			changeDetected = 0;
+	}
     
 	return 0;
 }

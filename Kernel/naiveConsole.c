@@ -128,3 +128,10 @@ static void scrollUp()
 	currentVideo = video + (height - 1) * width * 2;
 }
 
+void ncErase(uint16_t amount)
+{
+	for(int i = 0; i < amount * 2; i++){
+		*currentVideo = '\0';
+		currentVideo--;
+	}
+}

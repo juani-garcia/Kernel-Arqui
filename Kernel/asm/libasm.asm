@@ -38,18 +38,3 @@ accessClock: ; unsigned int accessClock(unsigned char mode)
 	mov rsp, rbp
 	pop rbp
 	ret
-
-getKey: ; unsigned int getKey();
-	push rbp
-	mov rbp, rsp
-	xor rax, rax
-.loop:    
-	in al, 0x64       
-    and al, 0x01       
-    cmp al, 0
-    je .loop
-    in al, 0x60
-       
-    mov rsp, rbp
-    pop rbp
-    ret

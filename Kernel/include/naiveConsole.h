@@ -8,6 +8,7 @@ void ncPrintAtt(const char * string, char frontColor, char backColor, char blink
 void ncPrintChar(char character);
 void ncPrintCharAtt(char character, char attribute);
 void ncNewline();
+void ncErase(uint16_t pos);
 void ncPrintDec(uint64_t value);
 void ncPrintHex(uint64_t value);
 void ncPrintBin(uint64_t value);

@@ -1,4 +1,4 @@
-GLOBAL cpuVendor, accessClock, getKey
+GLOBAL cpuVendor, accessClock, testKey
 
 section .text
 	
@@ -34,6 +34,16 @@ accessClock: ; unsigned int accessClock(unsigned char mode)
 	out 70h, al
 	xor rax, rax
 	in al, 71h
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+testKey:
+	push rbp
+	mov rbp, rsp
+
+	int 21h
 
 	mov rsp, rbp
 	pop rbp

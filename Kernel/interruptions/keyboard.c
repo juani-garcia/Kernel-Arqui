@@ -1,6 +1,9 @@
 #include <stdint.h>
 #include "keyboard.h"
 
+static uint8_t buffer[256]={0};
+static uint64_t w_pointer = buffer, r_pointer = buffer;
+
 static int kbdus[128] = {
 	0,  27, '1', '2', '3', '4', '5', '6', '7', '8',
 	'9', '0', '-', '=', -1, '\t', 'q', 'w', 'e', 
@@ -37,8 +40,14 @@ static int kbdus[128] = {
 };
 
 void keyboard_handler(void) {
-    uint8_t character = kbRead();
-    ncPrintChar(kbdus[character]);
+    // uint8_t character = kbRead();
+    // if (character > 0x80) {
+    //     ncPrintChar(kbdus[character-0x80]);
+    //     ncNewline();
+    //   return;
+    // }
+    // kbRead();
+    ncPrintChar('a');
     ncNewline();
     return;
 }

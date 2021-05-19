@@ -117,21 +117,16 @@ int main()
 	load_idt();
 	uint8_t  changeDetected = 0;
 
-	// while(1){
-		
-	// 	if(!changeDetected && ticks_elapsed() % (18) == 0){
-	// 		changeDetected = 1;
-	// 		ncErase(18);
-	// 		timeToStr(time);
-	// 		dateToStr(date);
-	// 		ncPrint(date); ncPrint("; "); ncPrint(time);
-	// 	}
-	// 	if(changeDetected && ticks_elapsed() % (18) != 0)
-	// 		changeDetected = 0;
-	// }
-
-	while(1) {
-		// testKey();
+	while(1){
+		if(!changeDetected && ticks_elapsed() % (18) == 0){
+			changeDetected = 1;
+			ncErase(18);
+			timeToStr(time);
+			dateToStr(date);
+			ncPrint(date); ncPrint("; "); ncPrint(time);
+		}
+		if(changeDetected && ticks_elapsed() % (18) != 0)
+			changeDetected = 0;
 	}
     
 	return 0;

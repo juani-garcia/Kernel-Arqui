@@ -38,13 +38,3 @@ accessClock: ; unsigned int accessClock(unsigned char mode)
 	mov rsp, rbp
 	pop rbp
 	ret
-
-testKey:
-	push rbp
-	mov rbp, rsp
-
-	int 21h
-
-	mov rsp, rbp
-	pop rbp
-	ret

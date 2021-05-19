@@ -131,7 +131,7 @@ int main()
 	// }
 
 	while(1) {
-		testKey();
+		// testKey();
 	}
     
 	return 0;

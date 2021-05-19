@@ -8,11 +8,8 @@ kbRead: ; unsigned int kbRead(void);
 
     xor rax, rax
 
-	in al, 0x64
 	in al, 0x60
 
 	mov rsp, rbp
 	pop rbp
 	ret
-
-

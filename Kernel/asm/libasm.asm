@@ -1,4 +1,4 @@
-GLOBAL cpuVendor, accessClock, getKey
+GLOBAL cpuVendor, accessClock, testKey
 
 section .text
 	

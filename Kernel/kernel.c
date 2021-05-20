@@ -124,6 +124,7 @@ int main()
 			timeToStr(time);
 			dateToStr(date);
 			ncPrint(date); ncPrint("; "); ncPrint(time);
+			test80();
 		}
 		if(changeDetected && ticks_elapsed() % (18) != 0)
 			changeDetected = 0;

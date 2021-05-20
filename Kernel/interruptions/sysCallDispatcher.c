@@ -13,7 +13,7 @@ static PSysCall sysCalls[255] = {&write};
 int write(unsigned int fd, const char * buf, size_t count) {
     ncPrint("Hola Mundo!");
     ncNewline();
-    return 0;
+    return 0;  // TODO: develop how we manage the syscall
 }
 
 uint64_t sysCallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rax) {  // TODO: Depending on how many sysCalls we have we have to see wich regiters we use.

@@ -13,14 +13,17 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
+GLOBAL _sysCall80Handler
+
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
+EXTERN sysCallDispatcher
 EXTERN exceptionDispatcher
 
 SECTION .text
 
-%macro pushState 0
+%macro pushStateHardware 0
 	push rax
 	push rbx
 	push rcx
@@ -38,7 +41,7 @@ SECTION .text
 	push r15
 %endmacro
 
-%macro popState 0
+%macro popStateHardware 0
 	pop r15
 	pop r14
 	pop r13
@@ -56,8 +59,42 @@ SECTION .text
 	pop rax
 %endmacro
 
+%macro pushStateSysCall 0
+	push rbx
+	push rcx
+	push rdx
+	push rbp
+	push rdi
+	push rsi
+	push r8
+	push r9
+	push r10
+	push r11
+	push r12
+	push r13
+	push r14
+	push r15
+%endmacro
+
+%macro popStateSysCall 0
+	pop r15
+	pop r14
+	pop r13
+	pop r12
+	pop r11
+	pop r10
+	pop r9
+	pop r8
+	pop rsi
+	pop rdi
+	pop rbp
+	pop rdx
+	pop rcx
+	pop rbx
+%endmacro
+
 %macro irqHandlerMaster 1
-	pushState
+	pushStateHardware
 
 	mov rdi, %1 ; pasaje de parametro
 	call irqDispatcher
@@ -66,19 +103,45 @@ SECTION .text
 	mov al, 20h
 	out 20h, al
 
-	popState
+	popStateHardware
+	iretq
+    ; IRET returns from an interrupt (hardware or software) 
+	; by means of popping IP (or EIP), CS, and the flags off 
+	; the stack and then continuing execution from the new CS:IP.
+
+    ; IRETW pops IP, CS and the flags as 2 bytes each, 
+	; taking 6 bytes off the stack in total. IRETD pops EIP 
+	; as 4 bytes, pops a further 4 bytes of which the top two 
+	; are discarded and the bottom two go into CS, and pops 
+	; the flags as 4 bytes as well, taking 12 bytes off the stack.
+
+    ; IRET is a shorthand for either IRETW or IRETD, 
+	; depending on the default BITS setting at the time.
+
+	; IRETQ preserves the flags and other things. ;; TODO: google this.
+%endmacro
+
+%macro sysCallHandlerMaster 1
+	pushStateSysCall
+
+	mov rcx, rax  ;; TODO: Check this, there has to be a better way of doing it.
+	call sysCallDispatcher
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	popStateSysCall
 	iretq
 %endmacro
 
 
-
 %macro exceptionHandler 1
-	pushState
+	pushStateHardware
 
-	mov rdi, %1 ; pasaje de parametro
 	call exceptionDispatcher
 
-	popState
+	popStateHardware
 	iretq
 %endmacro
 
@@ -137,6 +200,9 @@ _irq04Handler:
 ;USB
 _irq05Handler:
 	irqHandlerMaster 5
+
+_sysCall80Handler:    ;; TODO: Does 80 need to be here or is it enough calling it "_sysCallhandler"?
+	sysCallHandlerMaster 80
 
 
 ;Zero Division Exception

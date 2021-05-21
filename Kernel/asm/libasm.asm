@@ -1,4 +1,4 @@
-GLOBAL cpuVendor, accessClock, test80
+GLOBAL cpuVendor, accessClock, print
 
 section .text
 	
@@ -39,7 +39,7 @@ accessClock: ; unsigned int accessClock(unsigned char mode)
 	pop rbp
 	ret
 
-test80:
+print:
 	push rbp
 	mov rbp, rsp
 

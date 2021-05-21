@@ -11,7 +11,7 @@
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
-extern uint8_t bss;
+extern uint8_t bss; 
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 
@@ -124,7 +124,6 @@ int main()
 			timeToStr(time);
 			dateToStr(date);
 			ncPrint(date); ncPrint("; "); ncPrint(time);
-			test80();
 		}
 		if(changeDetected && ticks_elapsed() % (18) != 0)
 			changeDetected = 0;

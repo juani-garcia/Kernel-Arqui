@@ -1,4 +1,4 @@
-GLOBAL cpuVendor, accessClock, print
+GLOBAL cpuVendor, accessClock, print, getVideoModeInformation
 
 section .text
 	
@@ -45,6 +45,17 @@ print:
 
 	xor rax, rax
 	int 80h
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+getVideoModeInformation:
+	push rbp
+	mov rbp, rsp
+
+	mov ax, 0x4F01
+	int 10h
 
 	mov rsp, rbp
 	pop rbp

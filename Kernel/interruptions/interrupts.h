@@ -17,6 +17,8 @@ void _irq03Handler(void);
 void _irq04Handler(void);
 void _irq05Handler(void);
 
+uint64_t _sysCall80Handler(uint64_t rdi, uint64_t rsi, uint64_t rdx);
+
 void _exception0Handler(void);
 
 void _cli(void);

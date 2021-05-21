@@ -26,7 +26,7 @@ cpuVendor:
 	pop rbp
 	ret
 
-accessClock: ; unsigned int accessClock(unsigned char mode)
+accessClock: ; unsigned char accessClock(unsigned char mode)
 	push rbp
 	mov rbp, rsp
 

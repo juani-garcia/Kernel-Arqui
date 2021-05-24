@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "keyboard.h"
+#include <naiveConsole.h>
 
 static uint8_t buffer[256]={0};
 static uint64_t w_pointer = buffer, r_pointer = buffer;  
@@ -41,6 +42,6 @@ static int kbdus[128] = {
 };
 
 void keyboard_handler(void) {
-    kbRead();
+    ncPrintChar(kbdus[kbRead()]);
     return;
 }

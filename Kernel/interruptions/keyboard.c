@@ -3,7 +3,7 @@
 #include <naiveConsole.h>
 
 static uint8_t buffer[256]={0};
-static uint64_t w_pointer = buffer, r_pointer = buffer;  
+static uint64_t w_pointer = (uint64_t)buffer, r_pointer = (uint64_t)buffer;  
 // TODO: Develop this when we handle the keys into the screen.
 
 static int kbdus[128] = {

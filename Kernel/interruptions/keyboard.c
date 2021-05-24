@@ -2,8 +2,11 @@
 #include "keyboard.h"
 #include <naiveConsole.h>
 
-static uint8_t buffer[256]={0};
-static uint64_t w_pointer = (uint64_t)buffer, r_pointer = (uint64_t)buffer;  
+#define BUFFER_LENGTH 256
+typedef uint8_t BufferPtr;
+
+static uint8_t buffer[BUFFER_LENGTH]={0};
+static BufferPtr w_pointer = 0, r_pointer = 0;  
 // TODO: Develop this when we handle the keys into the screen.
 
 static int kbdus[128] = {
@@ -42,6 +45,15 @@ static int kbdus[128] = {
 };
 
 void keyboard_handler(void) {
-    ncPrintChar(kbdus[kbRead()]);
+    uint8_t scanCode = kbRead();
+    // TODO: Check how we manage the keys, how many keys we accept, etc. 
+    uint8_t character = kbdus[scanCode];
+
+    buffer[w_pointer++] = character; // Add the character to the ciclic buffer and increment the w_pointer.
+    ncPrintChar(character);
     return;
 }
+
+
+
+

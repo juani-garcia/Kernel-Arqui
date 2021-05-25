@@ -1,19 +1,17 @@
+#include <interrupts.h>
+#include <naiveConsole.h>
 
-typedef void (*Pexception)(void);
+static void int_00();
 
-#define ZERO_EXCEPTION_ID 0
+typedef void (*PException)(void);
+static PException exceptions[0x20] = {&int_00};
 
-static void zero_division();
-
-void exceptionDispatcher(int exception) {
-    Pexception exceptions[0x20]={0};
-    exceptions[0] = &zero_division;
-    Pexception exc = exceptions[exception];
-    if (exc != 0)
-        exc();
-    return;
+static void int_00() {
+    ncPrint("Division by zero");
 }
 
-static void zero_division() {
-    // Handler para manejar excepcíon
+void exceptionDispatcher(int exception) {
+    PException exc = exceptions[exception];
+    if (exc != 0) exc();
+    return;
 }

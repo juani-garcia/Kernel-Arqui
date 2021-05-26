@@ -24,7 +24,11 @@ unsigned int minutes()
 
 unsigned int hours()
 {
-    return decode(accessClock(HOURS)) + TIME_ZONE;
+    uint8_t hour = decode(accessClock(HOURS));
+    if(hour <= 2){
+        hour = 24 - hour;
+    }
+    return hour;
 }
 
 unsigned int day(){

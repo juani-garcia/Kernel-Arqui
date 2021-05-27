@@ -117,7 +117,8 @@ int main()
 	load_idt();
 	uint8_t  changeDetected = 0;
 	ncNewline();
-	int k = 10/0;
+	//int k = 10/0;
+	show_registers();
 
 	// while(1){
 	// 	if(!changeDetected && ticks_elapsed() % (18) == 0){

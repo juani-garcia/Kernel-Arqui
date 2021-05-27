@@ -143,7 +143,6 @@ SECTION .text
 	call exceptionDispatcher
 
 	popStateHardware
-	;sub rsp, 8 <---- CHANGE THIS!
 	iretq
 %endmacro
 

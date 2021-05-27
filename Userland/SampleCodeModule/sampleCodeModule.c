@@ -10,7 +10,9 @@ static int var2 = 0;
 
 int main() {
 
-	print(STDOUT, "Hola mundo!", 11);
+	char buf[200];
+	scanf(NULL, buf, 100);
+	print(STDERR, buf, 100);
 
 	return 0;
 }

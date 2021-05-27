@@ -17,14 +17,23 @@ long write(unsigned int fd, const char * buf, size_t count) {
     char att = fd==STDERR? 0x0C : 0x07;
     int i;
     for(i = 0; buf[i] && i < count; i++){
-        ncPrintCharAtt(buf[i], att);
+        if (buf[i] == '\n')     // TODO: idk why this creates an exception.
+            ncNewline();
+        else
+            ncPrintCharAtt(buf[i], att);
     }
     ncNewline();
     return i == 0? -1 : i;  // TODO: see if this return value is valid. Or should we send codes?
 }
 
 long read(unsigned int fd, char * buf, size_t count) {
-    return 0;
+    // TODO: What could we use fd for¿?
+    long read_count = -1;
+    while ( read_count == -1 ) {
+        read_count = copy_from_buffer(buf, count); 
+        keyboard_handler(); // TODO: THIS IS WRONG but i do not know how we can manage it.
+    }
+    return read_count;
 }
 
 uint64_t sysCallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rax) {  // TODO: Depending on how many sysCalls we have we have to see wich regiters we use.

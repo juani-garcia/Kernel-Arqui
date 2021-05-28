@@ -10,5 +10,6 @@ void * memcpy(void * destination, const void * source, uint64_t length);
 char *cpuVendor(char *result);
 
 int print(unsigned int fd, const char * buf, size_t count);
+void show_registers();
 
 #endif

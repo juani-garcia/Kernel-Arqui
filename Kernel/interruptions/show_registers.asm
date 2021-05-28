@@ -2,7 +2,7 @@ section .text
 GLOBAL show_registers
 
 extern ncPrint
-extern ncPrintDec
+extern ncPrintReg
 extern ncNewline
 
 %macro pushRegisters 0
@@ -46,7 +46,7 @@ show_registers:
     mov rdi, reg1
     call ncPrint
     mov rdi, rax
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
 
@@ -54,7 +54,7 @@ show_registers:
     mov rdi, reg2
     call ncPrint
     mov rdi, rbx
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
 
@@ -62,7 +62,7 @@ show_registers:
     mov rdi, reg3
     call ncPrint
     mov rdi, rcx
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
 
@@ -70,7 +70,7 @@ show_registers:
     mov rdi, reg4
     call ncPrint
     mov rdi, rdx
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
 
@@ -79,7 +79,7 @@ show_registers:
     mov rdi, reg5
     call ncPrint
     mov rdi, rbx
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
 
@@ -87,15 +87,15 @@ show_registers:
     mov rdi, reg6
     call ncPrint
     mov rdi, rsi
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
 
     pushRegisters
     mov rdi, reg7
     call ncPrint
-    ;;mov rdi,[rsp + 16]  ;; Change line to obtain rip value
-    call ncPrintDec
+    mov rdi, [rsp + 15*8]  ;; Change line to obtain rip value
+    call ncPrintReg
     call ncNewline
     popRegisters
 
@@ -103,7 +103,7 @@ show_registers:
     mov rdi, reg8
     call ncPrint
     mov rdi, rsp
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
 
@@ -111,7 +111,7 @@ show_registers:
     mov rdi, reg9
     call ncPrint
     mov rdi, rbp
-    call ncPrintDec
+    call ncPrintReg
     call ncNewline
     popRegisters
     ret

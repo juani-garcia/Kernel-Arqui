@@ -73,11 +73,11 @@ void keyboard_handler(void) {
 long copy_from_buffer(char * buf, size_t count) {
   if (r_pointer == w_pointer || buffer[w_pointer-1] != '\n') return -1;
   
-  size_t i = 0;
-  
   if (count > BUFFER_LENGTH) {} // TODO: what do we do.
+  
+  long i = 0;
 
-  while (count > i && r_pointer != w_pointer)  // TODO: Check if we keep the last \n
+  while (i < count && r_pointer != w_pointer)  // TODO: Check if we keep the last \n
     buf[i++] = buffer[r_pointer++];
 
   if (count < i) buf[i] = 0;

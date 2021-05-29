@@ -1,5 +1,7 @@
 rebuild: clean all
 
+debug: bootloader kernel_debug userland_debug image
+
 all:  bootloader kernel userland image
 
 bootloader:
@@ -8,8 +10,14 @@ bootloader:
 kernel:
 	cd Kernel; make all
 
+kernel_debug:
+	cd Kernel; make debug
+
 userland:
 	cd Userland; make all
+
+userland_debug:
+	cd Userland; make debug
 
 image: kernel bootloader userland
 	cd Image; make all

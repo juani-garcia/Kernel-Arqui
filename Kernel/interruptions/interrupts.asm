@@ -21,6 +21,8 @@ EXTERN irqDispatcher
 EXTERN sysCallDispatcher
 EXTERN exceptionDispatcher
 
+EXTERN ncPrintChar
+
 SECTION .text
 
 %macro pushStateHardware 0
@@ -139,6 +141,7 @@ SECTION .text
 %macro exceptionHandler 1
 	pushStateHardware
 
+    mov rdi, %1
 	call exceptionDispatcher
 
 	popStateHardware

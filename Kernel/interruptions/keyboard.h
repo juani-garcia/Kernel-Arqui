@@ -8,7 +8,7 @@
 typedef uint8_t BufferPtr;
 
 static uint8_t buffer[BUFFER_LENGTH]={0};
-static BufferPtr w_pointer = 0, r_pointer = 0;  
+static BufferPtr w_pointer = 0, r_pointer = 0;
 // TODO: Develop this when we handle the keys into the screen.
 
 uint8_t kbRead();

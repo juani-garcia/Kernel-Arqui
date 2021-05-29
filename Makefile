@@ -1,6 +1,6 @@
 rebuild: clean all
 
-debug: bootloader kernel_debug userland_debug image
+debug: kernel_debug userland_debug
 
 all:  bootloader kernel userland image
 

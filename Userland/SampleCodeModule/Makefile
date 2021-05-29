@@ -12,10 +12,10 @@ ALL_OBJECTS= $(OBJECTS) $(OBJECTS_ASM)
 debug: $(MODULE_DEBUG)
 
 $(MODULE_DEBUG): $(ALL_OBJECTS)
-	$(GCC) $(GCCFLAGS_DEBUG) -T sampleCodeModule.ld -Wl,--oformat=elf64-x86-64 -o $@ $^
+	$(GCC) -g $(GCCFLAGS) -T sampleCodeModule.ld -Wl,--oformat=elf64-x86-64 -o $@ $^
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS_DEBUG) -I./include -c $< -o $@
+	$(GCC) -g $(GCCFLAGS) -I./include -c $< -o $@
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
@@ -33,6 +33,6 @@ $(MODULE): $(ALL_OBJECTS)
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o
+	rm -rf *.o *.bin *.elf
 
 .PHONY: all clean print

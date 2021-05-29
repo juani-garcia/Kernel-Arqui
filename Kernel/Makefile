@@ -1,6 +1,7 @@
 include Makefile.inc
 
 KERNEL=kernel.bin
+KERNEL_DEBUG=kernel.elf
 SOURCES=$(wildcard *.c)
 SOURCES_INTERRUPTIONS=$(wildcard interruptions/*.c)
 SOURCES_INTERRUPTIONS_ASM=$(wildcard interruptions/*.asm)
@@ -18,13 +19,13 @@ ALL_OBJECTS= $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(OBJECTS_INTERRUPTIONS) 
 
 
 
-debug: $(KERNEL)
+debug: $(KERNEL_DEBUG)
 
-$(KERNEL): $(STATICLIBS) $(ALL_OBJECTS)
-	$(LD) $(LDFLAGS) -T kernel.ld -oformat=elf64-x86-64 -o kernel.elf $@
+$(KERNEL_DEBUG): $(STATICLIBS) $(ALL_OBJECTS)
+	$(LD) $(LDFLAGS) -T kernel.ld -oformat=elf64-x86-64 -o $@ $^
 
 %.o: %.c
-	$(GCC) $(GCCFLAGS_DEBUG) -I./include -I./interruptions -c $< -o $@ 
+	$(GCC) -g $(GCCFLAGS) -I./include -I./interruptions -c $< -o $@ 
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
@@ -50,5 +51,6 @@ $(LOADEROBJECT):
 
 clean:
 	rm -rf $(ALL_OBJECTS) *.bin
+	rm -rf *.elf
 
 .PHONY: all clean

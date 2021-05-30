@@ -19,7 +19,7 @@ ALL_OBJECTS= $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(OBJECTS_INTERRUPTIONS) 
 
 
 
-debug: $(KERNEL_DEBUG)
+debug: $(KERNEL_DEBUG) # TODO Develop debug mode
 
 $(KERNEL_DEBUG): $(STATICLIBS) $(ALL_OBJECTS)
 	$(LD) $(LDFLAGS) -T kernel.ld -oformat=elf64-x86-64 -o $@ $^

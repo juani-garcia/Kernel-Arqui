@@ -1,27 +1,25 @@
-GLOBAL print, scanf
+GLOBAL print, read
 
 section .text
 
 print:
     push rbp
-    mov rsp, rbp
-    
-    mov rax, 7
-
     mov rbp, rsp
+    
+    xor rax, rax
+    int 80h
+
+    mov rsp, rbp
     pop rbp
     ret
 
-scanf:
+read:
     push rbp
-    mov rsp, rbp
+    mov rbp, rsp
 
     mov rax, 1
     int 80h
 
-    mov rax, 0
-    int 80h
-
-    mov rbp, rsp
+    mov rsp, rbp
     pop rbp
     ret 

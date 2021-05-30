@@ -129,9 +129,11 @@ SECTION .text
 	mov rcx, rax  ;; TODO: Check this, there has to be a better way of doing it.
 	call sysCallDispatcher
 
+	push rax
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
+	pop rax
 
 	popStateSysCall
 	iretq

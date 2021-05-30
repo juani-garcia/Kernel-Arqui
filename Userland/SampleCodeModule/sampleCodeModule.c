@@ -9,6 +9,8 @@ static int var2 = 0;
 
 
 int main() {
-	try_catch_ud();
-	return 0;
+	char buf[200];
+	read(STDOUT, buf, 200);
+	print(STDERR, buf, 200);
+	return 6;
 }

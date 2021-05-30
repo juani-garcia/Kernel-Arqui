@@ -53,6 +53,7 @@ void * initializeKernelBinary()
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
+		// Are this the modules we need to implement for each functionality?
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
@@ -120,6 +121,8 @@ int main()
 	char time[9] = {0};
 	timeToStr(time);
 	ncPrint(date); ncPrint("; "); ncPrint(time);
+
+	uint8_t  changeDetected = 0;
 
 	while(1){
 		if(!changeDetected && ticks_elapsed() % (18) == 0){

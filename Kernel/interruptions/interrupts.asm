@@ -21,6 +21,8 @@ EXTERN irqDispatcher
 EXTERN sysCallDispatcher
 EXTERN exceptionDispatcher
 
+EXTERN ncPrintChar
+
 SECTION .text
 
 %macro pushStateHardware 0
@@ -127,9 +129,11 @@ SECTION .text
 	mov rcx, rax  ;; TODO: Check this, there has to be a better way of doing it.
 	call sysCallDispatcher
 
+	push rax
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
+	pop rax
 
 	popStateSysCall
 	iretq
@@ -138,6 +142,7 @@ SECTION .text
 
 %macro exceptionHandler 1
 	pushStateHardware
+
 
 	mov rdi, %1
 	call exceptionDispatcher

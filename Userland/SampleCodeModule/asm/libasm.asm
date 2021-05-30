@@ -1,8 +1,12 @@
-GLOBAL print,  try_catch_ud
+
+GLOBAL print, read
+
+section .text
+
 print:
     push rbp
     mov rbp, rsp
-
+    
     xor rax, rax
     int 80h
 
@@ -10,12 +14,14 @@ print:
     pop rbp
     ret
 
-try_catch_ud:
+
+read:
     push rbp
     mov rbp, rsp
 
-    UD2
+    mov rax, 1
+    int 80h
 
-    mov rbp, rsp
+    mov rsp, rbp
     pop rbp
     ret

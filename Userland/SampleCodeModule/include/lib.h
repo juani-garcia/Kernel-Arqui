@@ -7,6 +7,7 @@
 
 void print(unsigned int fd, const char * buf, size_t count);
 long read(unsigned int fd, char * buf, size_t count);
+void try_catch_ud(void);
 
 
 #endif

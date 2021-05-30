@@ -111,7 +111,6 @@ int main()
 	ncPrint("[Finished]");
 	ncNewline();
 
-	uint8_t  changeDetected = 0;
 	ncNewline();
 	//show_registers();
 	

@@ -143,9 +143,12 @@ SECTION .text
 %macro exceptionHandler 1
 	pushStateHardware
 
-
 	mov rdi, %1
 	call exceptionDispatcher
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
 
 	popStateHardware
 	iretq

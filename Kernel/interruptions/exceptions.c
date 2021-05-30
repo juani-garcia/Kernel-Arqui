@@ -10,8 +10,8 @@ static void int_00(void);
 static void int_06(void);
 static PException exceptions[0x20] = {&int_00, 0, 0, 0, 0, 0, &int_06};
 
-static char * messages[2] = {"Division by zero", "Wrong operation code"};
-static uint8_t msg_len[2] = {16, 20};
+static char * messages[2] = {"Division by zero.\n", "Wrong operation code.\n"};
+static uint8_t msg_len[2] = {18, 22};
 
 static void exception(char * msg, uint8_t len) {
     print(STDERR, msg, len);

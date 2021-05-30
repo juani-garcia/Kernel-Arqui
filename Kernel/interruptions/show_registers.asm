@@ -114,15 +114,96 @@ show_registers:
     call ncPrintReg
     call ncNewline
     popRegisters
+    
+    pushRegisters
+    mov rdi, reg16
+    call ncPrint
+    mov rdi, r8
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg17
+    call ncPrint
+    mov rdi, r9
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg10
+    call ncPrint
+    mov rdi, r10
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg11
+    call ncPrint
+    mov rdi, r11
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg12
+    call ncPrint
+    mov rdi, r12
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg12
+    call ncPrint
+    mov rdi, r12
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg13
+    call ncPrint
+    mov rdi, r13
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg14
+    call ncPrint
+    mov rdi, r14
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
+    pushRegisters
+    mov rdi, reg15
+    call ncPrint
+    mov rdi, r15
+    call ncPrintReg
+    call ncNewline
+    popRegisters
+
     ret
 
 section .data
-reg1 db "rax: ", 0
-reg2 db "rbx: ", 0
-reg3 db "rcx: ", 0
-reg4 db "rdx: ", 0
-reg5 db "rdi: ", 0
-reg6 db "rsi: ", 0
-reg7 db "rip: ", 0
-reg8 db "rsp: ", 0
-reg9 db "rbp: ", 0
+reg1 db "RAX: ", 0
+reg2 db "RBX: ", 0
+reg3 db "RCX: ", 0
+reg4 db "RDX: ", 0
+reg5 db "RDI: ", 0
+reg6 db "RSI: ", 0
+reg7 db "RIP: ", 0
+reg8 db "RSP: ", 0
+reg9 db "RBP: ", 0
+reg10 db "R10: ", 0
+reg11 db "R11: ", 0
+reg12 db "R12: ", 0
+reg13 db "R13: ", 0
+reg14 db "R14: ", 0
+reg15 db "R15: ", 0
+reg16 db "R8:  ", 0
+reg17 db "R9:  ", 0

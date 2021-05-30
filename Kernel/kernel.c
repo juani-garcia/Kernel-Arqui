@@ -87,6 +87,7 @@ void * initializeKernelBinary()
 int main()
 {	
 	ncClear();
+	load_idt();
 	ncPrintAtt("Arquitectura de las Computadoras", 2, 15, 1);
 	ncNewline();
 	ncPrint("[Kernel Main]");
@@ -109,10 +110,8 @@ int main()
 	ncPrint("[Finished]");
 	ncNewline();
 
-	load_idt();
 	uint8_t  changeDetected = 0;
 	ncNewline();
-	int k = 10/0;
 	//show_registers();
 	
 	ncNewline();

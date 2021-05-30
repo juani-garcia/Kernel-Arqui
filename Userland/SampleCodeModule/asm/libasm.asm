@@ -1,3 +1,4 @@
+
 GLOBAL print, read
 
 section .text
@@ -13,6 +14,7 @@ print:
     pop rbp
     ret
 
+
 read:
     push rbp
     mov rbp, rsp
@@ -22,4 +24,4 @@ read:
 
     mov rsp, rbp
     pop rbp
-    ret 
+    ret

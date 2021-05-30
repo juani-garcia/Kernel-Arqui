@@ -15,8 +15,8 @@ GLOBAL _irq05Handler
 
 GLOBAL _sysCall80Handler
 
-GLOBAL _exception0Handler
-
+GLOBAL _exception00Handler
+GLOBAL _exception06Handler
 EXTERN irqDispatcher
 EXTERN sysCallDispatcher
 EXTERN exceptionDispatcher
@@ -143,7 +143,8 @@ SECTION .text
 %macro exceptionHandler 1
 	pushStateHardware
 
-    mov rdi, %1
+
+	mov rdi, %1
 	call exceptionDispatcher
 
 	popStateHardware
@@ -211,8 +212,11 @@ _sysCall80Handler:    ;; TODO: Does 80 need to be here or is it enough calling i
 
 
 ;Zero Division Exception
-_exception0Handler:
+_exception00Handler:
 	exceptionHandler 0
+
+_exception06Handler:
+	exceptionHandler 6
 
 haltcpu:
 	cli

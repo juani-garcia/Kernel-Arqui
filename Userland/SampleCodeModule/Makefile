@@ -33,6 +33,6 @@ $(MODULE): $(ALL_OBJECTS)
 	$(ASM) $(ASMFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o *.bin *.elf
+	rm -rf *.o *.bin *.elf asm/*.o
 
 .PHONY: all clean print

@@ -10,5 +10,5 @@ static int var2 = 0;
 
 int main() {
 	try_catch_ud();
-	return 6;
+	return 4/0;
 }

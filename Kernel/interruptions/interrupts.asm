@@ -1,4 +1,3 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -17,11 +16,10 @@ GLOBAL _sysCall80Handler
 
 GLOBAL _exception00Handler
 GLOBAL _exception06Handler
+
 EXTERN irqDispatcher
 EXTERN sysCallDispatcher
 EXTERN exceptionDispatcher
-
-EXTERN ncPrintChar
 
 SECTION .text
 
@@ -120,7 +118,7 @@ SECTION .text
     ; IRET is a shorthand for either IRETW or IRETD, 
 	; depending on the default BITS setting at the time.
 
-	; IRETQ preserves the flags and other things. ;; TODO: google this.
+	; IRETQ preserves the flags and other things. ;; it is the IRETD of 64 bits.
 %endmacro
 
 %macro sysCallHandlerMaster 1

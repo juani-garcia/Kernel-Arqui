@@ -17,10 +17,11 @@ static void exception(char * msg, uint8_t len) {
     print(STDERR, msg, len);
     show_registers();
     print(STDERR, "Press enter to continue...", 26);
-    uint8_t sc;
+    int elapsed = 0, actual = seconds_elapsed();
     do{
-        sc = kbRead();
-    } while(sc != 0x1C);
+        _hlt();
+        elapsed = seconds_elapsed();
+    } while(actual + 5 >= elapsed);
 
     // TODO: find a way to restart the process after the exc is called.
 }

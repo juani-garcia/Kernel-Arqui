@@ -61,3 +61,4 @@ dkms.conf
 *settings.json
 *.bash_history
 .vscode
+.gdb_history

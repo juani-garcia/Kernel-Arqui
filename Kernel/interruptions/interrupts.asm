@@ -1,4 +1,3 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -15,7 +14,8 @@ GLOBAL _irq05Handler
 
 GLOBAL _sysCall80Handler
 
-GLOBAL _exception0Handler
+GLOBAL _exception00Handler
+GLOBAL _exception06Handler
 
 EXTERN irqDispatcher
 EXTERN sysCallDispatcher
@@ -118,7 +118,7 @@ SECTION .text
     ; IRET is a shorthand for either IRETW or IRETD, 
 	; depending on the default BITS setting at the time.
 
-	; IRETQ preserves the flags and other things. ;; TODO: google this.
+	; IRETQ preserves the flags and other things. ;; it is the IRETD of 64 bits.
 %endmacro
 
 %macro sysCallHandlerMaster 1
@@ -127,9 +127,11 @@ SECTION .text
 	mov rcx, rax  ;; TODO: Check this, there has to be a better way of doing it.
 	call sysCallDispatcher
 
+	push rax
 	; signal pic EOI (End of Interrupt)
 	mov al, 20h
 	out 20h, al
+	pop rax
 
 	popStateSysCall
 	iretq
@@ -139,7 +141,12 @@ SECTION .text
 %macro exceptionHandler 1
 	pushStateHardware
 
+	mov rdi, %1
 	call exceptionDispatcher
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
 
 	popStateHardware
 	iretq
@@ -206,8 +213,11 @@ _sysCall80Handler:    ;; TODO: Does 80 need to be here or is it enough calling i
 
 
 ;Zero Division Exception
-_exception0Handler:
+_exception00Handler:
 	exceptionHandler 0
+
+_exception06Handler:
+	exceptionHandler 6
 
 haltcpu:
 	cli

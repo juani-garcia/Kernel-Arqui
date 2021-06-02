@@ -53,6 +53,7 @@ void * initializeKernelBinary()
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
+		// Are this the modules we need to implement for each functionality?
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
@@ -87,6 +88,7 @@ void * initializeKernelBinary()
 int main()
 {	
 	ncClear();
+	load_idt();
 	ncPrintAtt("Arquitectura de las Computadoras", 2, 15, 1);
 	ncNewline();
 	ncPrint("[Kernel Main]");
@@ -108,25 +110,29 @@ int main()
 
 	ncPrint("[Finished]");
 	ncNewline();
+
+	ncNewline();
+	//show_registers();
+	
+	ncNewline();
 	char date[9] = {0};
 	dateToStr(date);
 	char time[9] = {0};
 	timeToStr(time);
 	ncPrint(date); ncPrint("; "); ncPrint(time);
 
-	load_idt();
 	uint8_t  changeDetected = 0;
 
 	while(1){
-		// if(!changeDetected && ticks_elapsed() % (18) == 0){
-		// 	changeDetected = 1;
-		// 	ncErase(18);
-		// 	timeToStr(time);
-		// 	dateToStr(date);
-		// 	ncPrint(date); ncPrint("; "); ncPrint(time);
-		// }
-		// if(changeDetected && ticks_elapsed() % (18) != 0)
-		// 	changeDetected = 0;
+		if(!changeDetected && ticks_elapsed() % (18) == 0){
+			changeDetected = 1;
+			ncErase(18);
+			timeToStr(time);
+			dateToStr(date);
+			ncPrint(date); ncPrint("; "); ncPrint(time);
+		}
+		if(changeDetected && ticks_elapsed() % (18) != 0)
+			changeDetected = 0;
 	}
     
 	return 0;

@@ -12,7 +12,9 @@ int _start() {
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
 
-	return main();
+	int ans = main();
+
+	return 6;
 
 }
 

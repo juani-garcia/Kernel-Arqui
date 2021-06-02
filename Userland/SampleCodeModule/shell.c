@@ -1,12 +1,20 @@
 #include <lib.h>
-#define COMMANDS 5
+#include <stdint.h>
+#include <shell.h>
+#define COMMANDS 4
+#define MAX_BUFFER_LENGTH 256
 
-typedef void (*Pcommnads);
+static char buffer[MAX_BUFFER_LENGTH] = {0};
 
-static Pcommands commands_code[] = {&ayuda, &print_mem, &inforeg, &fecha_y_hora, &divbyzero};
+static uint8_t get_command();
+static void command_listener();
+void ayuda(void);
+void inforeg(void);
+
+typedef void (*Pcommands)(void);
+
 // TODO: should be compared with strcmp
-const char * commands[] = {"ayuda", "printmem", "inforeg", "fechayhora", "divbyzerocheck"};
-
+static char * commands[] = {"ayuda", "inforeg"};
 
 // TODO: implement printf along with scanf, putChar and getChar in order for this functionality to work
 void ayuda(){    
@@ -18,15 +26,45 @@ void ayuda(){
 }
 
 // TODO: after merging, this function should call show_registers
-void print_mem(){
+void inforeg(){
     
 }
 
-static uint8_t get_command(const char * str){
+static Pcommands command_codes[] = {&ayuda, &inforeg};
+
+static uint8_t get_command() {
     int i;
     for(i = 0; i < COMMANDS; i++){
-        if(strcmp(commands[i], str) == 0)
+        if(strcmp(commands[i], buffer) == 0)
             return i;
     }
     return -1;
+}
+
+static void command_listener() {
+    int i = 0;
+    unsigned char c;
+    while((c = getchar()) != '\n' && c != '\t'){
+        if(c == '\b' && i > 0)
+            i--;
+        else
+            buffer[i++] = c;
+        putchar(c);
+    }
+    buffer[i] = 0;
+}
+
+
+void run_shell() {
+    while(1) {
+        printf(">> ");
+        command_listener();
+        int idx = get_command();
+        if(idx == -1)
+            printf("No such command. Run command help to see all commands.\n");
+        else {
+           Pcommands command = command_codes[idx];
+           command();
+        }
+    }
 }

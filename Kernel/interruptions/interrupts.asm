@@ -1,3 +1,4 @@
+
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -20,6 +21,7 @@ GLOBAL _exception06Handler
 EXTERN irqDispatcher
 EXTERN sysCallDispatcher
 EXTERN exceptionDispatcher
+EXTERN ncPrintChar
 
 SECTION .text
 
@@ -123,6 +125,18 @@ SECTION .text
 
 %macro sysCallHandlerMaster 1
 	pushStateSysCall
+
+	mov rdi, 65
+	call ncPrintChar
+	mov rdi, 66
+	call ncPrintChar
+	mov rdi, 67
+	call ncPrintChar
+	mov rdi, 68
+	call ncPrintChar
+	mov rdi, 69
+	call ncPrintChar
+
 
 	mov rcx, rax  ;; TODO: Check this, there has to be a better way of doing it.
 	call sysCallDispatcher

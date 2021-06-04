@@ -1,4 +1,6 @@
 GLOBAL _cpuid_support
+
+
 ;; el bit 21 de los rflags me determina si el procesador soporta la instruccion cpuid 
 _cpuid_support:
     push rbx            ; guardo valores para conservarlos luego de retornar

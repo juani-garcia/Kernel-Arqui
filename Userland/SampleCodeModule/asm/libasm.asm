@@ -1,4 +1,4 @@
-GLOBAL print, read, try_catch_ud, check_cpuid_support
+GLOBAL print, read, try_catch_ud, check_cpuid_support, get_cpuid_info
 
 section .text
 
@@ -6,7 +6,7 @@ print:
     push rbp
     mov rbp, rsp
     
-    xor rax, rax
+    mov rax, 1
     int 80h
 
     mov rsp, rbp
@@ -18,7 +18,7 @@ read:
     push rbp
     mov rbp, rsp
 
-    mov rax, 1
+    xor rax, rax
     int 80h
 
     mov rsp, rbp
@@ -41,6 +41,22 @@ check_cpuid_support:
 
     mov rax, 2
     int 80h
+
+    mov rsp, rbp
+    pop rbp
+    ret
+
+get_cpuid_info:
+    push rbp
+    mov rbp, rsp
+
+    mov eax, DWORD [rdi]
+    mov ecx, DWORD [rsi]
+
+    cpuid
+
+    mov [rsi], DWORD eax
+    mov [rdi], DWORD edx
 
     mov rsp, rbp
     pop rbp

@@ -9,6 +9,8 @@ static char get_command();
 static void command_listener();
 void ayuda(void);
 void inforeg(void);
+void available(uint64_t reg, char moves);
+void features_support(void);
 
 typedef void (*Pcommands)(void);
 
@@ -19,8 +21,9 @@ static char * commands[COMMANDS] = {"ayuda", "inforeg", "support"};
 void ayuda() {
     printf("Los comandos disponibles son los siguientes:\n\n");
     printf("inforeg       -imprime en pantalla el valor de todos los registros.\n");
-    printf("printmem      -realiza un volcado de memoria de 32 bytes a partir de la direccion que se recibe como argumento.\n");
-    printf("fechayhora    -desplega en pantalla el día y la hora del sistema.\n");
+    printf("printmem      -realiza un volcado de memoria de 32 bytes a partir de la\n");
+    printf("               direccion que se recibe como argumento.\n");
+    printf("fechayhora    -desplega en pantalla el dia y la hora del sistema.\n");
     printf("ayuda         -muestra todos los comandos disponibles.\n");
 }
 
@@ -33,9 +36,51 @@ void features_support(){
     printf("cpuid support: ");
     if(check_cpuid_support()){
         printf("yes.\n");
+        uint32_t f_arg = 0, s_arg = 0;
+        get_cpuid_info(&f_arg, &s_arg);
+        //uint32_t regecx = check_cpuid_features_01();
+        //printf("mx support: ");
+        printf("sse support: ");
+        available(s_arg, 25);
+        printf("sse2 support: ");
+        available(s_arg, 26);
+        printf("sse3 support: ");
+        available(f_arg, 0);
+        printf("sse4.1 support: ");
+        available(f_arg, 19);
+        printf("sse4.2 support: ");
+        available(f_arg, 20);
+        printf("aesni support: ");
+        available(f_arg, 25);
+        printf("pclmulqdq support: ");
+        available(f_arg, 1);
+        printf("avx support: ");
+        available(f_arg, 28);
+        printf("f16c support: ");
+        available(f_arg, 29);
+        printf("fma support: ");
+        available(f_arg, 12);
+
+        f_arg = 7;
+        // get_cpuid_info(f_arg, s_arg)
+        // printf("avx2 support: ");
+        // available();
+        // printf("vpclmulqdq support: ");
+        // available(f_arg, 10);
+        // printf("vaesni support: ");
+        // available();
+
     } else {
         printf("no.\n");
     }
+    return;
+}
+
+void available(uint64_t reg, char moves) {
+    if(((reg >> moves) & 0x01) == 1)
+            printf("yes.\n");
+        else
+            printf("no.\n");
 }
 
 static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support};
@@ -68,6 +113,7 @@ static void command_listener() {
 
 
 int run_shell() {
+    printf("\n");
     while(1) {
         printf(">> ");
         command_listener();

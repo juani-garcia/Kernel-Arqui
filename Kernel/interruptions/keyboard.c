@@ -1,11 +1,11 @@
 #include <stdint.h>
-#include "keyboard.h"
+#include <keyboard.h>
 #include <naiveConsole.h>
 #include <stddef.h>
 
 static int kbdus[128] = {
 	0,  0, '1', '2', '3', '4', '5', '6', '7', '8',
-	'9', '0', '-', -1, -1, '\t', 'q', 'w', 'e', 
+	'9', '0', '-', '=', '\b', '\t', 'q', 'w', 'e', 
 	'r', 't', 'y', 'u', 'i', 'o', 'p', 0, 0, 
 	'\n', 0, 'a', 's', 'd', 'f', 'g', 'h', 'j', 
 	'k', 'l', 0, '\'', '`', 0, '\\', 'z', 'x', 
@@ -51,27 +51,12 @@ void keyboard_handler(void) {
 
     /* -------------------------------------------------------- */
 
-    if (character == -1) {
-      if (w_pointer != r_pointer) {
-        ncErase(1);
-        w_pointer--;
-        // TODO: If needed we should add support for deleting \n;
-      }
-      return;
-    }
-    
-    if (character == '\n') {
-      ncNewline();
-    } else {
-      ncPrintChar(character);
-    }
-
     buffer[w_pointer++] = character; // Add the character to the ciclic buffer and increment the w_pointer.
     return;
 }
 
 long copy_from_buffer(char * buf, size_t count) {
-  if (r_pointer == w_pointer || buffer[w_pointer-1] != '\n') return -1; // TODO: Check what we can do if the buffer "pega la vuelta".
+  if (r_pointer == w_pointer) return -1; // TODO: Check what we can do if the buffer "pega la vuelta".
   
   if (count > BUFFER_LENGTH) {} // TODO: what do we do.
   
@@ -79,8 +64,6 @@ long copy_from_buffer(char * buf, size_t count) {
 
   while (i < count && r_pointer != w_pointer)  // TODO: Check if we keep the last \n
     buf[i++] = buffer[r_pointer++];
-
-  if (count > i) buf[i] = 0;
   
   return i;
 }

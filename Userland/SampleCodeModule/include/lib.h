@@ -2,6 +2,8 @@
 #define __LIB_ASM__H__
 
 #include <stddef.h>
+#include <stdint.h>
+
 #define STDIN 0
 #define STDOUT 1
 #define STDERR 2
@@ -14,6 +16,6 @@ int strcmp( char * str1, char * str2);
 void printf(const char * str);
 int getchar();
 void putchar(char c);
-
+char check_cpuid_support(void);
 
 #endif

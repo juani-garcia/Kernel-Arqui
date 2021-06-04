@@ -99,6 +99,9 @@ int main()
 	ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	ncNewline();
+	ncPrint("  Calling the sample code module returned: ");
+	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	ncNewline();
 	ncNewline();
 
 	ncPrint("  Sample data module at 0x");

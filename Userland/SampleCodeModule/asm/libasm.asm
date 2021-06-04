@@ -1,4 +1,4 @@
-GLOBAL print, read, try_catch_ud
+GLOBAL print, read, try_catch_ud, check_cpuid_support
 
 section .text
 
@@ -30,6 +30,17 @@ try_catch_ud:
     mov rbp, rsp
 
     UD2
+
+    mov rsp, rbp
+    pop rbp
+    ret
+
+check_cpuid_support:
+    push rbp
+    mov rbp, rsp
+
+    mov rax, 2
+    int 80h
 
     mov rsp, rbp
     pop rbp

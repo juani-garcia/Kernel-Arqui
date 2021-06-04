@@ -4,13 +4,16 @@
 #include <naiveConsole.h>
 #include <lib.h>
 #include <interrupts.h>
+#include <cpu_support.h>
 
 typedef uint64_t (*PSysCall)(uint64_t, uint64_t, uint64_t);
 
 static long write(unsigned int fd, const char * buf, size_t count); // TODO: Fix long for ssize_t
 static long read(unsigned int fd, char * buf, size_t count);
+static uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 
-static PSysCall sysCalls[255] = {&write, &read};
+
+static PSysCall sysCalls[255] = {&write, &read, &cpuid_support};
 
 long write(unsigned int fd, const char * buf, size_t count) {
     if (buf == NULL)
@@ -20,6 +23,8 @@ long write(unsigned int fd, const char * buf, size_t count) {
     for(i = 0; buf[i] && i < count; i++){
         if (buf[i] == '\n')     // TODO: idk why this creates an exception.
             ncNewline();
+        else if (buf[i] == '\b')
+            ncErase(1);
         else
             ncPrintCharAtt(buf[i], att);
     }
@@ -34,6 +39,10 @@ long read(unsigned int fd, char * buf, size_t count) {
         _hlt();
     }
     return read_count;
+}
+
+uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
+    return _cpuid_support();
 }
 
 uint64_t sysCallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rax) {  // TODO: Depending on how many sysCalls we have we have to see wich regiters we use.

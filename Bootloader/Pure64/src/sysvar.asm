@@ -4,7 +4,7 @@
 ;
 ; System Variables
 ; =============================================================================
-_
+
 
 ;CONFIG
 cfg_smpinit:		db 1	; By default SMP is enabled. Set to 0 to disable.

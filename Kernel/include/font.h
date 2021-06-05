@@ -1,10 +1,18 @@
+// Created from bdf2c Version 3, (c) 2009, 2010 by Lutz Sammer
+//	License AGPLv3: GNU Affero General Public License version 3
+// Retrived from: https://github.com/pixelmatix/bdf2c & https://sourceforge.net/projects/bdf2c/
+
+
 #ifndef FONT_H
 #define FONT_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
+
+uint8_t * getCharMappping(uint8_t c);
 
 #define ________ 0x00
 #define _______X 0x01
@@ -262,8 +270,6 @@
 #define XXXXXX_X 0xFD
 #define XXXXXXX_ 0xFE
 #define XXXXXXXX 0xFF
-
-uint8_t * getCharMappping(uint8_t c);
 
 uint8_t pixel_chars[] = {
 //   0 $00 'char0'

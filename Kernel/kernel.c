@@ -4,7 +4,6 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
-#include <videoDriver.h>
 #include <clock.h>
 #include <interrupts.h>
 #include <time.h>
@@ -123,12 +122,6 @@ int main()
 	char time[9] = {0};
 	timeToStr(time);
 	ncPrint(date); ncPrint("; "); ncPrint(time);
-
-	for(int i = 0; i < 200 ; i++){
-		for(int j = 0; j < 200; j++){
-			draw_pixel(i, j, 0xC00000);
-		}
-	}
 
 	
 

@@ -4,7 +4,7 @@
 #include <cursor.h>
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-static void scrollUp(uint8_t lines);
+static void scrollUp();
 static int numlen(uint64_t val);
 
 static char buffer[128] = { '0' };
@@ -33,29 +33,31 @@ void ncPrintAtt(const char * string, uint32_t frontColor, uint32_t backColor) {
 }
 
 void ncPrintChar(char character) {
-	ncPrintCharAtt(character, BLACK, WHITE);
+	ncPrintCharAtt(character, WHITE, BLACK);
 }
 
 void ncPrintCharAtt(char character, uint32_t frontColor, uint32_t backColor) {
 	if (getX(&cursor) >= width) {
 		setX(&cursor, 0);
 		if (getY(&cursor) >= height - CHAR_HEIGHT) {
-			scrollUp(SCROLL_UP_LINES);
+			scrollUp();
 		} else {
-			setY(&cursor, getY(&cursor) + CHAR_HEIGHT);
+			uint16_t y = getY(&cursor);
+			setY(&cursor, y + CHAR_HEIGHT);
 		}
 	}
 
-	uint8_t * letter = getCharMappping(character);
+	uint8_t * letter = getCharMapping(character);
 	for(int i = 0; i < CHAR_HEIGHT; i++) {
 		for(int j = 0; j < CHAR_WIDTH; j++) {
 			if(letter[i] & (1 << j))
 				draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), frontColor);
 			else
-				draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + cursor.y, backColor);
+				draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), backColor);
 		}
 	}
-	setX(&cursor, getX(&cursor) + CHAR_WIDTH);
+	uint16_t x = getX(&cursor);
+	setX(&cursor, x + CHAR_WIDTH);
 }
 
 void cpyPixel(int x_dst, int y_dst, int x_src, int y_src) {
@@ -66,20 +68,12 @@ void cpyPixel(int x_dst, int y_dst, int x_src, int y_src) {
 	to[2] = from[2];
 }
 
-void scrollUp(uint8_t lines) {
-	for (int k=0; k < lines; k++) {
-		for (int j = 0; j < height ; j++ ) {
-			for(int i = 0; i < width ; i++) {
-				cpyPixel(i, j, i, j + CHAR_HEIGHT);
-			}
-		}
-		for (int i = 0; i < CHAR_HEIGHT; i++) {
-			for (int j = 0; j < width; j++) {
-				draw_pixel(i, j, BLACK);
-			}
+void scrollUp() {
+	for (int j = 0; j < height ; j++ ) {
+		for(int i = 0; i < width ; i++) {
+			cpyPixel(i, j, i, j + CHAR_HEIGHT);
 		}
 	}
-	setY(&cursor, getY(&cursor) - (CHAR_HEIGHT * (lines - 1)));
 }
 
 void ncNewline() {
@@ -88,10 +82,9 @@ void ncNewline() {
 	}	while((getX(&cursor) < width));
 	setX(&cursor, 0);
 	if (getY(&cursor) > height - CHAR_HEIGHT) {
-		scrollUp(SCROLL_UP_LINES);
-	} else {
-		setY(&cursor, getY(&cursor) + CHAR_HEIGHT);
+		scrollUp();
 	}
+	setY(&cursor, getY(&cursor) + CHAR_HEIGHT);
 }
 
 void ncPrintDec(uint64_t value) {

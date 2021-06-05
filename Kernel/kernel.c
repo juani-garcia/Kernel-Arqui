@@ -7,6 +7,8 @@
 #include <clock.h>
 #include <interrupts.h>
 #include <time.h>
+#include <videoDriver.h>
+#include <cursor.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -39,48 +41,49 @@ void * getStackBase()
 void * initializeKernelBinary()
 {
 	char buffer[10];
+	initScreen();
 
-	ncPrint("[x64BareBones]");
-	ncNewline();
+	// ncPrint("[x64BareBones]");
+	// ncNewline();
 
-	ncPrint("CPU Vendor:");
-	ncPrint(cpuVendor(buffer));
-	ncNewline();
+	// ncPrint("CPU Vendor:");
+	// ncPrint(cpuVendor(buffer));
+	// ncNewline();
 
-	ncPrint("[Loading modules]");
-	ncNewline();
+	// ncPrint("[Loading modules]");
+	// ncNewline();
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
 		// Are this the modules we need to implement for each functionality?
 	};
 
-	loadModules(&endOfKernelBinary, moduleAddresses);
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
+	// loadModules(&endOfKernelBinary, moduleAddresses);
+	// ncPrint("[Done]");
+	// ncNewline();
+	// ncNewline();
 
-	ncPrint("[Initializing kernel's binary]");
-	ncNewline();
+	// ncPrint("[Initializing kernel's binary]");
+	// ncNewline();
 
-	clearBSS(&bss, &endOfKernel - &bss);
+	// clearBSS(&bss, &endOfKernel - &bss);
 
-	ncPrint("  text: 0x");
-	ncPrintHex((uint64_t)&text);
-	ncNewline();
-	ncPrint("  rodata: 0x");
-	ncPrintHex((uint64_t)&rodata);
-	ncNewline();
-	ncPrint("  data: 0x");
-	ncPrintHex((uint64_t)&data);
-	ncNewline();
-	ncPrint("  bss: 0x");
-	ncPrintHex((uint64_t)&bss);
-	ncNewline();
+	// ncPrint("  text: 0x");
+	// ncPrintHex((uint64_t)&text);
+	// ncNewline();
+	// ncPrint("  rodata: 0x");
+	// ncPrintHex((uint64_t)&rodata);
+	// ncNewline();
+	// ncPrint("  data: 0x");
+	// ncPrintHex((uint64_t)&data);
+	// ncNewline();
+	// ncPrint("  bss: 0x");
+	// ncPrintHex((uint64_t)&bss);
+	// ncNewline();
 
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
+	// ncPrint("[Done]");
+	// ncNewline();
+	// ncNewline();
 	return getStackBase();
 }
 
@@ -103,41 +106,44 @@ int main()
 	// ncNewline();
 	// ncNewline();
 
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
+	ncPrintChar(screen->width);
+	ncPrintChar(screen->height);
+	ncPrintChar(cursor.x);
+	ncPrintChar(cursor.y);
 
-	ncPrint("[Finished]");
-	ncNewline();
+	// ncPrint("  Sample data module at 0x");
+	// ncPrintHex((uint64_t)sampleDataModuleAddress);
+	// ncNewline();
+	// ncPrint("  Sample data module contents: ");
+	// ncPrint((char*)sampleDataModuleAddress);
+	// ncNewline();
 
-	ncNewline();
-	//show_registers();
+	// ncPrint("[Finished]");
+	// ncNewline();
+
+	// ncNewline();
+	// //show_registers();
 	
-	ncNewline();
-	char date[9] = {0};
-	dateToStr(date);
-	char time[9] = {0};
-	timeToStr(time);
-	ncPrint(date); ncPrint("; "); ncPrint(time);
+	// ncNewline();
+	// char date[9] = {0};
+	// dateToStr(date);
+	// char time[9] = {0};
+	// timeToStr(time);
+	// ncPrint(date); ncPrint("; "); ncPrint(time);
 
-	
+	// uint8_t  changeDetected = 0;
 
-	uint8_t  changeDetected = 0;
-
-	while(1){
-		if(!changeDetected && ticks_elapsed() % (18) == 0){
-			changeDetected = 1;
-			ncErase(18);
-			timeToStr(time);
-			dateToStr(date);
-			ncPrint(date); ncPrint("; "); ncPrint(time);
-		}
-		if(changeDetected && ticks_elapsed() % (18) != 0)
-			changeDetected = 0;
-	}
+	// while(1){
+	// 	if(!changeDetected && ticks_elapsed() % (18) == 0){
+	// 		changeDetected = 1;
+	// 		// ncErase(18);
+	// 		timeToStr(time);
+	// 		dateToStr(date);
+	// 		ncPrint(date); ncPrint("; "); ncPrint(time);
+	// 	}
+	// 	if(changeDetected && ticks_elapsed() % (18) != 0)
+	// 		changeDetected = 0;
+	// }
     
 	return 0;
 }

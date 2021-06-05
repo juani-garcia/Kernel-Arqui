@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-
 typedef struct cursor {
     uint16_t x;
     uint16_t y;

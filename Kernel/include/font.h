@@ -6,13 +6,12 @@
 #ifndef FONT_H
 #define FONT_H
 
-#include <stddef.h>
 #include <stdint.h>
 
 #define CHAR_WIDTH 8
 #define CHAR_HEIGHT 16
 
-uint8_t * getCharMappping(uint8_t c);
+uint8_t * getCharMapping(uint8_t c);
 
 #define ________ 0x00
 #define _______X 0x01
@@ -271,7 +270,7 @@ uint8_t * getCharMappping(uint8_t c);
 #define XXXXXXX_ 0xFE
 #define XXXXXXXX 0xFF
 
-uint8_t pixel_chars[] = {
+static uint8_t pixel_chars[] = {
 //   0 $00 'char0'
 //	width 8, bbx 0, bby -4, bbw 8, bbh 16
 	________,

@@ -1,4 +1,4 @@
-GLOBAL cpuVendor, accessClock, print, getVideoModeInformation
+GLOBAL cpuVendor, accessClock, print
 
 section .text
 	
@@ -45,17 +45,6 @@ print: ;; TODO: delete this?
 
 	mov rax, 1
 	int 80h
-
-	mov rsp, rbp
-	pop rbp
-	ret
-
-getVideoModeInformation:
-	push rbp
-	mov rbp, rsp
-
-	mov ax, 0x4F01
-	int 10h
 
 	mov rsp, rbp
 	pop rbp

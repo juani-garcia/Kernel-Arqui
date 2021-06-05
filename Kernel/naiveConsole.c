@@ -1,4 +1,6 @@
 #include <naiveConsole.h>
+#include <font.h>
+#include <videoDriver.h>
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 static void scrollUp();
@@ -6,10 +8,11 @@ static void checkPosition();
 static int numlen(uint64_t val);
 
 static char buffer[128] = { '0' };
-static uint8_t * const video = (uint8_t*)0xB8000;
-static uint8_t * currentVideo = (uint8_t*)0xB8000;
-static const uint32_t width = 80;
-static const uint32_t height = 25 ;
+static uint8_t * const video = ( uint8_t *) ((uint64_t)(screen->framebuffer);
+static uint8_t * currentVideo = video;
+static const uint32_t width = screen->width;
+static const uint32_t height = screen->height;
+static const uint8_t bpp = screen->bpp;
 
 void ncPrint(const char * string)
 {
@@ -18,34 +21,47 @@ void ncPrint(const char * string)
 		ncPrintChar(string[i]);
 }
 
-void ncPrintAtt(const char * string, char frontColor, char backColor, char blink)
+void ncPrintAtt(const char * string, uint32_t frontColor, uint32_t backColor)
 {
-	char attribute = 0;
-	attribute = (backColor << 4) | frontColor;
 	for (int i = 0; string[i] != 0; i++)
-		ncPrintCharAtt(string[i], attribute);
+		ncPrintCharAtt(string[i], frontColor, backColor);
 }
 
 void ncPrintChar(char character)
 {
-	ncPrintCharAtt(character, 0x07);
+	ncPrintCharAtt(character, 0xFF, 0x00);
 }
 
-void ncPrintCharAtt(char character, char attribute)
+void ncPrintCharAtt(char character, uint32_t frontColor, uint32_t backColor)
 {
-	checkPosition();
-	*currentVideo = character;
-	*(currentVideo + 1) = attribute;
-	currentVideo += 2;
+	uint8_t * letter = pixel_chars[character];
+	for(int i = 0; i < CHAR_WIDTH; i++){
+		
+	}4
+
 }
+
+void copyPixel(int toX, int toY, int fromX, int fromY){
+	char * from = (uint8_t *) ((uint64_t)(vbeInfo->framebuffer + vbeInfo->pitch *fromY + fromX* (int)(vbeInfo->bpp/8)));
+	char * to = (uint8_t *) ((uint64_t)(vbeInfo->framebuffer + vbeInfo->pitch *toY + toX* (int)(vbeInfo->bpp/8)));
+	to[0] = from[0];
+	to[1] = from[1];
+	to[2] = from[2];
+}
+
+void ncSlideUpLine(){
+	for(int i = 0; i < screen->height ;  )
+}
+
+
+// ----------------------------- sin editar
 
 void ncNewline()
 {
 	do
 	{
 		ncPrintChar(' ');
-	}
-	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+	}	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
 }
 
 void ncPrintDec(uint64_t value)

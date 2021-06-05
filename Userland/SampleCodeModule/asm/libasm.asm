@@ -55,8 +55,8 @@ get_cpuid_info:
 
     cpuid
 
-    mov [rsi], DWORD eax
-    mov [rdi], DWORD edx
+    mov [rsi], DWORD edx
+    mov [rdi], DWORD ecx
 
     mov rsp, rbp
     pop rbp

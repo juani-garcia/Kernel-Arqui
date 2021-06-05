@@ -91,6 +91,7 @@ void * initializeKernelBinary()
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
+		// Are this the modules we need to implement for each functionality?
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
@@ -125,12 +126,16 @@ void * initializeKernelBinary()
 int main()
 {	
 	ncClear();
+	load_idt();
 	ncPrintAtt("Arquitectura de las Computadoras", 2, 15, 1);
 	ncNewline();
 	ncPrint("[Kernel Main]");
 	ncNewline();
 	ncPrint("  Sample code module at 0x");
 	ncPrintHex((uint64_t)sampleCodeModuleAddress);
+	ncNewline();
+	ncPrint("  Calling the sample code module returned: ");
+	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	ncNewline();
 	ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
@@ -146,13 +151,17 @@ int main()
 
 	ncPrint("[Finished]");
 	ncNewline();
+
+	ncNewline();
+	//show_registers();
+	
+	ncNewline();
 	char date[9] = {0};
 	dateToStr(date);
 	char time[9] = {0};
 	timeToStr(time);
 	ncPrint(date); ncPrint("; "); ncPrint(time);
 
-	load_idt();
 	uint8_t  changeDetected = 0;
 
 	struct vbe_mode_info_structure info = {};

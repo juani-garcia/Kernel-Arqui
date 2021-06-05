@@ -3,6 +3,7 @@
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 static void scrollUp();
 static void checkPosition();
+static int numlen(uint64_t val);
 
 static char buffer[128] = { '0' };
 static uint8_t * const video = (uint8_t*)0xB8000;
@@ -108,6 +109,25 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 	}
 
 	return digits;
+}
+
+void ncPrintReg(uint64_t reg)
+{
+	ncPrint("0x");
+	uint8_t len = numlen(reg);
+	for(int i = 0; i < 16 - len; i++){
+		ncPrintChar('0');
+	}
+	ncPrintHex(reg);
+}
+
+static int numlen(uint64_t val){
+	int len = 0;
+	while(val != 0){
+		len++;
+		val /= 16;
+	}
+	return len + (len == 0);
 }
 
 static void checkPosition()

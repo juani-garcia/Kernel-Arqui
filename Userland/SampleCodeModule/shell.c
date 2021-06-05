@@ -37,9 +37,9 @@ void features_support(){
     printf("cpuid support: ");
     if(check_cpuid_support()){
         printf("yes.\n");
-        uint32_t f_arg = 1, s_arg = 1;
-        get_cpuid_info(&f_arg, &s_arg);
-
+        int f_arg = 1, s_arg = 1, t_arg = 0;
+        get_cpuid_info(&f_arg, &s_arg, &t_arg);
+        f_arg *= -1; s_arg *= -1;
         printf("sse support: ");
         available(s_arg, 25);
         printf("sse2 support: ");
@@ -61,14 +61,15 @@ void features_support(){
         printf("fma support: ");
         available(f_arg, 12);
 
-        f_arg = 7;
-        // get_cpuid_info(f_arg, s_arg)
-        // printf("avx2 support: ");
-        // available();
-        // printf("vpclmulqdq support: ");
-        // available(f_arg, 10);
-        // printf("vaesni support: ");
-        // available();
+        f_arg = 7; s_arg = 0;
+        get_cpuid_info(&f_arg, &s_arg, &t_arg);
+        f_arg *= -1; s_arg *= -1; t_arg *= -1;
+        printf("avx2 support: ");
+        available(t_arg, 6);
+        printf("vpclmulqdq support: ");
+        available(f_arg, 10);
+        printf("vaesni support: ");
+        available(t_arg, 0000000000000000000); // TODO
 
     } else {
         printf("no.\n");

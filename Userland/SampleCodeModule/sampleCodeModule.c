@@ -1,14 +1,6 @@
 /* sampleCodeModule.c */
-
-char * v = (char*)0xB8000 + 79 * 2;
-
-#include <lib.h>
-
-static int var1 = 0;
-static int var2 = 0;
-
+#include <shell.h>
 
 int main() {
-	try_catch_ud();
-	return 4/0;
+    return run_shell();
 }

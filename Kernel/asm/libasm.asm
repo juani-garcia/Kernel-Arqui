@@ -39,11 +39,11 @@ accessClock: ; unsigned char accessClock(unsigned char mode)
 	pop rbp
 	ret
 
-print:
+print: ;; TODO: delete this?
 	push rbp
 	mov rbp, rsp
 
-	xor rax, rax
+	mov rax, 1
 	int 80h
 
 	mov rsp, rbp

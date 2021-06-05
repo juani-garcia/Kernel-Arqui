@@ -34,23 +34,34 @@ void ncPrintChar(char character)
 
 void ncPrintCharAtt(char character, uint32_t frontColor, uint32_t backColor)
 {
-	uint8_t * letter = pixel_chars[character];
+	uint8_t * letter = getCharMappping(character);
 	for(int i = 0; i < CHAR_WIDTH; i++){
 		
-	}4
+	}
 
 }
 
-void copyPixel(int toX, int toY, int fromX, int fromY){
-	char * from = (uint8_t *) ((uint64_t)(vbeInfo->framebuffer + vbeInfo->pitch *fromY + fromX* (int)(vbeInfo->bpp/8)));
-	char * to = (uint8_t *) ((uint64_t)(vbeInfo->framebuffer + vbeInfo->pitch *toY + toX* (int)(vbeInfo->bpp/8)));
+void swapPixels(int x_dst, int y_dst, int x_src, int y_dst){
+	char * from = (uint8_t *) ((uint64_t)(vbeInfo->framebuffer + vbeInfo->pitch *y_src + x_src* (int)(vbeInfo->bpp/8)));
+	char * to = (uint8_t *) ((uint64_t)(vbeInfo->framebuffer + vbeInfo->pitch *y_dest + x_dest* (int)(vbeInfo->bpp/8)));
 	to[0] = from[0];
 	to[1] = from[1];
 	to[2] = from[2];
 }
 
-void ncSlideUpLine(){
-	for(int i = 0; i < screen->height ;  )
+void scrollUp(uint8_t lines){
+	for (int l = 0; l < (((screen->height/CHAR_HEIGHT) - lines) % (screen->height/CHAR_HEIGHT)); l++) {
+		for (int j = 0; j < screen->height ; j++ ){
+			for(int i = 0; i < screen->width ; i++){
+				copyPixel(i, (j + (CHAR_HEIGHT * l)) + CHAR_HEIGHT, i, (j + (CHAR_HEIGHT * l)) );
+			}
+		}
+	}
+
+
+	for(int k = 0; k < width * 2; k++)
+		video[(height - 1) * width * 2 + k] = '\0';
+	currentVideo = video + (height - 1) * width * 2;
 }
 
 

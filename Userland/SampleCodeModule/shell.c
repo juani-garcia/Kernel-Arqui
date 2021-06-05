@@ -1,5 +1,6 @@
 #include <lib.h>
 #include <shell.h>
+#include <cpuid.h>
 #define COMMANDS 4
 #define MAX_BUFFER_LENGTH 1
 
@@ -36,10 +37,9 @@ void features_support(){
     printf("cpuid support: ");
     if(check_cpuid_support()){
         printf("yes.\n");
-        uint32_t f_arg = 0, s_arg = 0;
+        uint32_t f_arg = 1, s_arg = 1;
         get_cpuid_info(&f_arg, &s_arg);
-        //uint32_t regecx = check_cpuid_features_01();
-        //printf("mx support: ");
+
         printf("sse support: ");
         available(s_arg, 25);
         printf("sse2 support: ");

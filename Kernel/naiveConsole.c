@@ -138,8 +138,8 @@ static void checkPosition()
 
 static void scrollUp()
 {
-	for(int i = 0; i < height - 1; i++){
-		for(int j = 0; j < width * 2; j++){
+	for(int i = 0; i < height - 1; i++) {
+		for(int j = 0; j < width * 2; j++) {
 			video[j + i * width * 2] = video[j + (i + 1) * width * 2];
 		}
 	}

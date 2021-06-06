@@ -1,8 +1,9 @@
 include ../Makefile.inc
 
+LOADER=_loader
 MODULE=0000-sampleCodeModule.bin
 MODULE_DEBUG=0000-sampleCodeModule.elf
-SOURCES=$(wildcard *.c)
+SOURCES=$(shell find -type f -name "*.c" ! -name "$(LOADER).c")
 SOURCES_ASM=$(wildcard asm/*.asm)
 OBJECTS=$(SOURCES:.c=.o)
 OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
@@ -11,11 +12,8 @@ ALL_OBJECTS= $(OBJECTS) $(OBJECTS_ASM)
 
 debug: $(MODULE_DEBUG)
 
-$(MODULE_DEBUG): $(ALL_OBJECTS)
-	$(GCC) -g $(GCCFLAGS) -T sampleCodeModule.ld -Wl,--oformat=elf64-x86-64 -o $@ $^
-
 %.o: %.c
-	$(GCC) -g $(GCCFLAGS) -I./include -c $< -o $@
+	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
 
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
@@ -23,8 +21,11 @@ $(MODULE_DEBUG): $(ALL_OBJECTS)
 
 all: $(MODULE)
 
-$(MODULE): $(ALL_OBJECTS)
-	$(GCC) $(GCCFLAGS) -T sampleCodeModule.ld -o $@ $^
+$(MODULE): $(MODULE_DEBUG)
+	objcopy -O binary $^ $@
+
+$(MODULE_DEBUG): $(LOADER).o $(ALL_OBJECTS) 
+	$(GCC) $(GCCFLAGS) -T sampleCodeModule.ld -static -Wl,--oformat=elf64-x86-64,--build-id=none -o $@ $(ALL_OBJECTS)
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@

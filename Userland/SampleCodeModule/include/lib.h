@@ -17,6 +17,7 @@ void printf(const char * str);
 int getchar();
 void putchar(char c);
 char check_cpuid_support(void);
-void get_cpuid_info(uint32_t * rax, uint32_t * rdx, uint32_t * rbx);
+
+void get_cpuid_info(uint32_t * ecx, uint32_t * edx, uint32_t * ebx);
 
 #endif

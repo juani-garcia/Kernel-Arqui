@@ -9,7 +9,7 @@ debug: sampleCodeModule_debug sampleCodeModule
 sampleCodeModule_debug:
 	cd SampleCodeModule; make debug
 
-sampleCodeModule:
+sampleCodeModule: 
 	cd SampleCodeModule; make all
 
 sampleDataModule:

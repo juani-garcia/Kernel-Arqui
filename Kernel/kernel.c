@@ -20,7 +20,6 @@ extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
-static void * const sampleDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
 
@@ -44,9 +43,7 @@ void * initializeKernelBinary()
 	initScreen();
 	
 	void * moduleAddresses[] = {
-		sampleCodeModuleAddress,
-		sampleDataModuleAddress
-		// Are this the modules we need to implement for each functionality?
+		sampleCodeModuleAddress
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
@@ -73,14 +70,6 @@ int main() {
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	ncNewline();
 	ncNewline();
-
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
-
 	ncPrint("[Finished]");
 	ncNewline();
 

@@ -1,7 +1,6 @@
 include Makefile.inc
 
 KERNEL=kernel.bin
-KERNEL_DEBUG=kernel.elf
 SOURCES=$(wildcard *.c)
 SOURCES_INTERRUPTIONS=$(wildcard interruptions/*.c)
 SOURCES_INTERRUPTIONS_ASM=$(wildcard interruptions/*.asm)
@@ -17,28 +16,13 @@ STATICLIBS=
 
 ALL_OBJECTS= $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(OBJECTS_INTERRUPTIONS) $(OBJECTS_INTERRUPTIONS_ASM)
 
-
-
-debug: $(KERNEL_DEBUG) # TODO Develop debug mode
-
-$(KERNEL_DEBUG): $(STATICLIBS) $(ALL_OBJECTS)
-	$(LD) $(LDFLAGS) -T kernel.ld -oformat=elf64-x86-64 -o $@ $^
-
-%.o: %.c
-	$(GCC) -g $(GCCFLAGS) -I./include -I./interruptions -c $< -o $@ 
-
-%.o : %.asm
-	$(ASM) $(ASMFLAGS) $< -o $@
-
-$(LOADEROBJECT):
-	$(ASM) $(ASMFLAGS) $(LOADERSRC) -o $(LOADEROBJECT)
-
-
-
 all: $(KERNEL)
 
-$(KERNEL): $(STATICLIBS) $(ALL_OBJECTS)
-	$(LD) $(LDFLAGS) -T kernel.ld -o $@ $^
+$(KERNEL).elf: $(STATICLIBS) $(ALL_OBJECTS)
+	$(GCC) $(GCCFLAGS) -T kernel.ld -static -Wl,--oformat=elf64-x86-64,--build-id=none -o $@ $^
+
+$(KERNEL): $(KERNEL).elf
+	objcopy -O binary $^ $@
 
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -I./include -I./interruptions -c $< -o $@

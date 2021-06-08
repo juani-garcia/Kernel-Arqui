@@ -44,7 +44,9 @@ struct vbe_mode_info_structure {
 #define G_MASK(g) (((g) >> 8) & 0x0000FF)
 #define B_MASK(b) ((b) & 0x0000FF)
 
-static struct vbe_mode_info_structure * screen = (struct vbe_mode_info_structure *)0x0000000000005C00;
+#define SCREEN 0x0000000000005C00
+
+static struct vbe_mode_info_structure * screen = (struct vbe_mode_info_structure *)SCREEN;
 
 void draw_pixel(uint16_t x, uint16_t y, uint32_t color);
 

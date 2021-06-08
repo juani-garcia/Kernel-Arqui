@@ -3,14 +3,9 @@
 
 #include <stdint.h>
 
-typedef struct cursor {
-    uint16_t x;
-    uint16_t y;
-} Tcursor;
+typedef struct cursor * Pcursor;
 
-static Tcursor cursor;
-
-typedef Tcursor * Pcursor;
+Pcursor initCursor();
 
 uint16_t getX(Pcursor cursor);
 uint16_t getY(Pcursor cursor);

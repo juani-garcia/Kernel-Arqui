@@ -7,6 +7,8 @@
 #include <clock.h>
 #include <interrupts.h>
 #include <time.h>
+#include <videoDriver.h>
+#include <cursor.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -21,7 +23,6 @@ static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
-
 
 void clearBSS(void * bssAddress, uint64_t bssSize)
 {
@@ -40,16 +41,8 @@ void * getStackBase()
 void * initializeKernelBinary()
 {
 	char buffer[10];
-
-	ncPrint("[x64BareBones]");
-	ncNewline();
-
-	ncPrint("CPU Vendor:");
-	ncPrint(cpuVendor(buffer));
-	ncNewline();
-
-	ncPrint("[Loading modules]");
-	ncNewline();
+	initScreen();
+	
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
 		sampleDataModuleAddress
@@ -57,39 +50,16 @@ void * initializeKernelBinary()
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
-
-	ncPrint("[Initializing kernel's binary]");
-	ncNewline();
 
 	clearBSS(&bss, &endOfKernel - &bss);
 
-	ncPrint("  text: 0x");
-	ncPrintHex((uint64_t)&text);
-	ncNewline();
-	ncPrint("  rodata: 0x");
-	ncPrintHex((uint64_t)&rodata);
-	ncNewline();
-	ncPrint("  data: 0x");
-	ncPrintHex((uint64_t)&data);
-	ncNewline();
-	ncPrint("  bss: 0x");
-	ncPrintHex((uint64_t)&bss);
-	ncNewline();
-
-	ncPrint("[Done]");
-	ncNewline();
-	ncNewline();
 	return getStackBase();
 }
 
-int main()
-{	
-	ncClear();
+int main() {
+	initScreen();
 	load_idt();
-	ncPrintAtt("Arquitectura de las Computadoras", 2, 15, 1);
+	ncPrintAtt("Arquitectura de las Computadoras", WHITE, BLACK);
 	ncNewline();
 	ncPrint("[Kernel Main]");
 	ncNewline();
@@ -129,7 +99,7 @@ int main()
 	while(1){
 		if(!changeDetected && ticks_elapsed() % (18) == 0){
 			changeDetected = 1;
-			ncErase(18);
+			// ncErase(18);
 			timeToStr(time);
 			dateToStr(date);
 			ncPrint(date); ncPrint("; "); ncPrint(time);

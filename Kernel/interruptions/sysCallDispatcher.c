@@ -11,14 +11,12 @@ typedef uint64_t (*PSysCall)(uint64_t, uint64_t, uint64_t);
 static long write(unsigned int fd, const char * buf, size_t count); // TODO: Fix long for ssize_t
 static long read(unsigned int fd, char * buf, size_t count);
 static uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx);
-static uint32_t cpuid_features(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 
-static PSysCall sysCalls[255] = {&read, &write, &cpuid_support};
+static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support};
 
 long write(unsigned int fd, const char * buf, size_t count) {
     if (buf == NULL)
         return -1;
-    char att = fd==STDERR? 0x0C : 0x07;
     int i;
     for(i = 0; buf[i] && i < count; i++){
         if (buf[i] == '\n')     // TODO: idk why this creates an exception.
@@ -26,7 +24,7 @@ long write(unsigned int fd, const char * buf, size_t count) {
         else if (buf[i] == '\b')
             ncErase(1);
         else
-            ncPrintCharAtt(buf[i], att);
+            ncPrintCharAtt(buf[i], WHITE, BLACK);
     }
     return i == 0? -1 : i;  // TODO: see if this return value is valid. Or should we send codes?
 }

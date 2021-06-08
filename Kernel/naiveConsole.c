@@ -1,97 +1,128 @@
 #include <naiveConsole.h>
+#include <font.h>
+#include <videoDriver.h>
+#include <cursor.h>
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 static void scrollUp();
-static void checkPosition();
 static int numlen(uint64_t val);
 
 static char buffer[128] = { '0' };
-static uint8_t * const video = (uint8_t*)0xB8000;
-static uint8_t * currentVideo = (uint8_t*)0xB8000;
-static const uint32_t width = 80;
-static const uint32_t height = 25 ;
+static Pcursor cursor;
 
-void ncPrint(const char * string)
-{
-	int i;
-	for (i = 0; string[i] != 0; i++)
+void initScreen(void) {
+	cursor = initCursor();
+}
+
+void ncPrint(const char * string) {
+	for (int i = 0; string[i] != 0; i++)
 		ncPrintChar(string[i]);
 }
 
-void ncPrintAtt(const char * string, char frontColor, char backColor, char blink)
-{
-	char attribute = 0;
-	attribute = (backColor << 4) | frontColor;
+void ncPrintAtt(const char * string, uint32_t frontColor, uint32_t backColor) {
 	for (int i = 0; string[i] != 0; i++)
-		ncPrintCharAtt(string[i], attribute);
+		ncPrintCharAtt(string[i], frontColor, backColor);
 }
 
-void ncPrintChar(char character)
-{
-	ncPrintCharAtt(character, 0x07);
+void ncPrintChar(char character) {
+	ncPrintCharAtt(character, WHITE, BLACK);
 }
 
-void ncPrintCharAtt(char character, char attribute)
-{
-	checkPosition();
-	*currentVideo = character;
-	*(currentVideo + 1) = attribute;
-	currentVideo += 2;
-}
-
-void ncNewline()
-{
-	do
-	{
-		ncPrintChar(' ');
+void ncPrintCharAtt(char character, uint32_t frontColor, uint32_t backColor) {
+	if (getX(&cursor) >= screen->width) {
+		setX(&cursor, 0);
+		if (getY(&cursor) >= screen->height - CHAR_HEIGHT) {
+			scrollUp();
+		} else {
+			uint16_t y = getY(&cursor);
+			setY(&cursor, y + CHAR_HEIGHT);
+		}
 	}
-	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+
+	uint8_t * letter = getCharMapping(character);
+	for(int i = 0; i < CHAR_HEIGHT; i++) {
+		for(int j = 0; j < CHAR_WIDTH; j++) {
+			if(letter[i] & (1 << j))
+				draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), frontColor);
+			else
+				draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), backColor);
+		}
+	}
+	uint16_t x = getX(&cursor);
+	setX(&cursor, x + CHAR_WIDTH);
 }
 
-void ncPrintDec(uint64_t value)
-{
+void cpyPixel(int x_dst, int y_dst, int x_src, int y_src) {
+	uint8_t * from = (uint8_t *) ((uint64_t)(screen->framebuffer + screen->pitch *y_src + x_src* (int)(screen->bpp/8)));
+	uint8_t * to = (uint8_t *) ((uint64_t)(screen->framebuffer + screen->pitch *y_dst + x_dst* (int)(screen->bpp/8)));
+	to[0] = from[0];
+	to[1] = from[1];
+	to[2] = from[2];
+}
+
+void scrollUp() {
+	for (int j = 0; j < screen->height ; j++ ) {
+		for(int i = 0; i < screen->width ; i++) {
+			cpyPixel(i, j, i, j + CHAR_HEIGHT);
+		}
+	}
+}
+
+void ncNewline() {
+	do {
+		for(int i = 0; i < CHAR_HEIGHT; i++) {
+			for(int j = 0; j < CHAR_WIDTH; j++) {
+					draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), BLACK);
+			}
+		}
+		setX(&cursor, getX(&cursor) + CHAR_WIDTH);
+	}while((getX(&cursor) < screen->width));
+	
+	setX(&cursor, 0);
+	if (getY(&cursor) > screen->height - CHAR_HEIGHT) {
+		scrollUp();
+	}
+	setY(&cursor, getY(&cursor) + CHAR_HEIGHT);
+}
+
+void ncPrintDec(uint64_t value) {
 	ncPrintBase(value, 10);
 }
 
-void ncPrintHex(uint64_t value)
-{
+void ncPrintHex(uint64_t value) {
 	ncPrintBase(value, 16);
 }
 
-void ncPrintBin(uint64_t value)
-{
+void ncPrintBin(uint64_t value) {
 	ncPrintBase(value, 2);
 }
 
-void ncPrintBase(uint64_t value, uint32_t base)
-{
+void ncPrintBase(uint64_t value, uint32_t base) {
     uintToBase(value, buffer, base);
     ncPrint(buffer);
 }
 
-void ncClear()
-{
-	int i;
-
-	for (i = 0; i < height * width; i++)
-		video[i * 2] = ' ';
-	currentVideo = video;
+void ncClear() {
+	for (int i = 0; i < screen->height; i++) {
+		for (int j = 0; j < screen->width; j++) {
+			draw_pixel(i, j, BLACK);
+		}
+	}
+	setX(&cursor, 0);
+	setY(&cursor, 0);
 }
 
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
-{
+static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base) {
 	char *p = buffer;
 	char *p1, *p2;
 	uint32_t digits = 0;
 
 	//Calculate characters for each digit
-	do
-	{
+	do {
 		uint32_t remainder = value % base;
 		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
 		digits++;
-	}
-	while (value /= base);
+	} while (value /= base);
 
 	// Terminate string in buffer.
 	*p = 0;
@@ -99,8 +130,7 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 	//Reverse string in buffer.
 	p1 = buffer;
 	p2 = p - 1;
-	while (p1 < p2)
-	{
+	while (p1 < p2) {
 		char tmp = *p1;
 		*p1 = *p2;
 		*p2 = tmp;
@@ -111,47 +141,40 @@ static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
 	return digits;
 }
 
-void ncPrintReg(uint64_t reg)
-{
+void ncPrintReg(uint64_t reg) {
 	ncPrint("0x");
 	uint8_t len = numlen(reg);
-	for(int i = 0; i < 16 - len; i++){
+	for(int i = 0; i < 16 - len; i++) {
 		ncPrintChar('0');
 	}
 	ncPrintHex(reg);
 }
 
-static int numlen(uint64_t val){
+static int numlen(uint64_t val) {
 	int len = 0;
-	while(val != 0){
+	while(val != 0) {
 		len++;
 		val /= 16;
 	}
 	return len + (len == 0);
 }
 
-static void checkPosition()
-{
-	if(currentVideo - video >= width * height * 2)
-		scrollUp();
-} 
-
-static void scrollUp()
-{
-	for(int i = 0; i < height - 1; i++){
-		for(int j = 0; j < width * 2; j++){
-			video[j + i * width * 2] = video[j + (i + 1) * width * 2];
+void ncErase(uint32_t amount) {
+	for (uint32_t c = 0; c < amount; c++) {
+		if (getX(&cursor) == 0) {
+			if (getY(&cursor) != 0) {
+				setY(&cursor, getY(&cursor) - CHAR_HEIGHT);
+				setX(&cursor, screen->width - CHAR_WIDTH);
+			} else {
+				return;
+			}
+		} else {
+			setX(&cursor, getX(&cursor) - CHAR_WIDTH);
 		}
-	}
-	for(int k = 0; k < width * 2; k++)
-		video[(height - 1) * width * 2 + k] = '\0';
-	currentVideo = video + (height - 1) * width * 2;
-}
-
-void ncErase(uint16_t amount)
-{
-	for(int i = 0; i < amount * 2; i++){
-		*currentVideo = '\0';
-		currentVideo--;
+		for (uint16_t x = getX(&cursor); x < getX(&cursor) + CHAR_WIDTH ; x++) {
+			for (uint16_t y = getY(&cursor); y < getY(&cursor) + CHAR_HEIGHT; y++){
+				draw_pixel(x, y, BLACK);
+			}
+		}
 	}
 }

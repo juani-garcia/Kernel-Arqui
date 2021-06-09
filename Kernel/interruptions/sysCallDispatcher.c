@@ -11,8 +11,9 @@ typedef uint64_t (*PSysCall)(uint64_t, uint64_t, uint64_t);
 static long write(unsigned int fd, const char * buf, size_t count); // TODO: Fix long for ssize_t
 static long read(unsigned int fd, char * buf, size_t count);
 static uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx);
+static void info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 
-static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support};
+static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support, (PSysCall)&info_reg};
 
 long write(unsigned int fd, const char * buf, size_t count) {
     if (buf == NULL)
@@ -37,6 +38,10 @@ long read(unsigned int fd, char * buf, size_t count) {
         _hlt();
     }
     return read_count;
+}
+
+void info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx){
+    show_registers();
 }
 
 uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx) {

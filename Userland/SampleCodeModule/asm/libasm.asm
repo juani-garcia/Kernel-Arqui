@@ -1,4 +1,4 @@
-GLOBAL print, read, try_catch_ud, check_cpuid_support, get_cpuid_info
+GLOBAL print, read, try_catch_ud, check_cpuid_support, get_cpuid_info, get_info_reg
 
 section .text
 
@@ -61,4 +61,16 @@ get_cpuid_info:
 
     mov rsp, rbp
     pop rbp
+    ret
+
+get_info_reg:
+    push rbp
+    mov rbp, rsp
+
+    mov rax, 3
+    int 80h
+
+    mov rsp, rbp
+    pop rbp
+
     ret

@@ -30,16 +30,16 @@ void ayuda() {
 
 // TODO: after merging, this function should call show_registers
 void inforeg(){
-    
+    get_info_reg();
 }
 
 void features_support(){
     printf("cpuid support: ");
     if(check_cpuid_support()){
         printf("yes.\n");
-        int f_arg = 1, s_arg = 1, t_arg = 0;
+        uint32_t f_arg = 1, s_arg = 1, t_arg = 0;
         get_cpuid_info(&f_arg, &s_arg, &t_arg);
-        f_arg *= -1; s_arg *= -1;
+
         printf("sse support: ");
         available(s_arg, 25);
         printf("sse2 support: ");
@@ -63,7 +63,6 @@ void features_support(){
 
         f_arg = 7; s_arg = 0;
         get_cpuid_info(&f_arg, &s_arg, &t_arg);
-        f_arg *= -1; s_arg *= -1; t_arg *= -1;
         printf("avx2 support: ");
         available(t_arg, 6);
         printf("vpclmulqdq support: ");

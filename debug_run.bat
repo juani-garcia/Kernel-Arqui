@@ -1,0 +1,1 @@
+qemu-system-x86_64.exe -S  -hda Image/x64BareBonesImage.qcow2 -m 512 -d int

@@ -4,6 +4,8 @@ GLOBAL _sti
 GLOBAL picMasterMask
 GLOBAL picSlaveMask
 GLOBAL haltcpu
+GLOBAL pushStateHardware
+GLOBAL popStateHardware
 GLOBAL _hlt
 
 GLOBAL _irq00Handler
@@ -215,14 +217,12 @@ _sysCall80Handler:    ;; TODO: Does 80 need to be here or is it enough calling i
 	sysCallHandlerMaster 80
 
 _processHandler:
-	pushStateSysCall
-	mov rax, rsp
-	
-	mov rdi, rax
+	pushStateHardware
+	mov rdi, rsp
 	call set_up_process
-
-	popStateSysCall
 	mov rsp, rax
+	popStateHardware
+	
 	iretq
 
 

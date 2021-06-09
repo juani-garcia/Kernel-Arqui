@@ -17,7 +17,7 @@ int strcmp( char * str1, char * str2) {
 
 //TODO: should be erased and replaced by myprintf
 void printf(const char * str) {
-    print(STDOUT, str, strlen(str));
+    //print(STDOUT, str, strlen(str));
 }
 
 /* 

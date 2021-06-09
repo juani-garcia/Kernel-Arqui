@@ -24,6 +24,8 @@ void load_processes(ProcessPtr p1, ProcessPtr p2) {
 uint64_t set_up_process(uint64_t rsp) {
     processes[activeProcess]->sp = rsp;
     activeProcess = 1 - activeProcess;
+    ncPrint("Me muevo al proceso "); ncPrintDec(activeProcess);
+    ncNewline();
     return processes[activeProcess]->sp;
 }
 

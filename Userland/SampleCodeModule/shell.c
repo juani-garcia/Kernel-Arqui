@@ -2,7 +2,7 @@
 #include <shell.h>
 #include <cpuid.h>
 #define COMMANDS 4
-#define MAX_BUFFER_LENGTH 1
+#define MAX_BUFFER_LENGTH 256
 
 static char buffer[MAX_BUFFER_LENGTH] = {0};
 

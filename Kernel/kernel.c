@@ -8,6 +8,7 @@
 #include <interrupts.h>
 #include <time.h>
 #include <videoDriver.h>
+#include <process.h>
 #include <cursor.h>
 
 extern uint8_t text;
@@ -20,6 +21,7 @@ extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
+stat
 
 typedef int (*EntryPoint)();
 
@@ -61,10 +63,11 @@ int main() {
 	ncPrint("[Kernel Main]");
 	ncNewline();
 	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
+	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	// ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	init_process(0x600000, (EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 	ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());

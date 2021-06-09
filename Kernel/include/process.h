@@ -10,11 +10,7 @@
 
 typedef struct process * proc;
 
-struct process {
-    uint16_t offset_x;
-    uint16_t offset_y;
-};
-
 static struct process curr_process = {0, 0};
+void init_process(uint64_t stack_base, uint64_t rip);
 
 #endif

@@ -5,7 +5,6 @@
 #include <lib.h>
 #include <interrupts.h>
 #include <cpu_support.h>
-#include <process.h>
 
 typedef uint64_t (*PSysCall)(uint64_t, uint64_t, uint64_t);
 
@@ -15,7 +14,7 @@ static uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 static void info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 void swap_shell();
 
-static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support, (PSysCall)&info_reg, (PSysCall)&swap_shell};
+static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support, (PSysCall)&info_reg};
 
 long write(unsigned int fd, const char * buf, size_t count) {
     if (buf == NULL)
@@ -42,18 +41,13 @@ long read(unsigned int fd, char * buf, size_t count) {
     return read_count;
 }
 
-void info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx){
+void info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     show_registers();
 }
 
 uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     return _cpuid_support();
 }
-
-void swap_shell(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rax){
-    switch_process();
-}
-
 
 uint64_t sysCallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rax) {  // TODO: Depending on how many sysCalls we have we have to see wich regiters we use.
     PSysCall sysCall = sysCalls[rax];

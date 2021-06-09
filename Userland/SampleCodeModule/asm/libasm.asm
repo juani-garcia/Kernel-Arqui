@@ -79,8 +79,7 @@ change_shell:
     push rbp
     mov rbp, rsp
 
-    mov rax, 0x04
-    int 80h
+    int 81h
 
     mov rsp, rbp
     pop rbp

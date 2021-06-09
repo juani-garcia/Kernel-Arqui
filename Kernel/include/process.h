@@ -24,7 +24,8 @@ void run_process(uint64_t rsp);
 
 void load_processes(ProcessPtr p1, ProcessPtr p2);
 void reboot_process(uint8_t id);
-void switch_process();
+
+uint64_t set_up_process(uint64_t rsp);
 void begin();
 
 

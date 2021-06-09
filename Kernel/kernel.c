@@ -21,8 +21,8 @@ extern uint8_t endOfKernel;
 static const uint64_t PageSize = 0x1000;
 
 static void * const sampleCodeModuleAddress = (void*)0x400000;
-static uint64_t stackBase1 = 0x600000, stackBase2 = 0x700000;
-
+static uint64_t stackBase1 = 0x600000;
+static uint64_t stackBase2 = 0x700000;
 typedef int (*EntryPoint)();
 
 void clearBSS(void * bssAddress, uint64_t bssSize)
@@ -66,9 +66,8 @@ int main() {
 	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 
-	Process p1, p2;
-	p1.stack_base = stackBase1; p1.ip = (uint64_t) sampleCodeModuleAddress; p1.sp = 0;
-	p1.stack_base = stackBase2; p2.ip = (uint64_t) sampleCodeModuleAddress; p2.sp = 0;
+	Process p1 = {stackBase1, (uint64_t) sampleCodeModuleAddress, 0x0};
+	Process p2 = {stackBase2, (uint64_t) sampleCodeModuleAddress, 0x0};
 	load_processes(&p1, &p2);
 	begin();
 

@@ -14,6 +14,7 @@ GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 
 GLOBAL _sysCall80Handler
+GLOBAL _processHandler
 
 GLOBAL _exception00Handler
 GLOBAL _exception06Handler
@@ -21,6 +22,7 @@ GLOBAL _exception06Handler
 EXTERN irqDispatcher
 EXTERN sysCallDispatcher
 EXTERN exceptionDispatcher
+EXTERN set_up_process
 
 SECTION .text
 
@@ -211,6 +213,17 @@ _irq05Handler:
 
 _sysCall80Handler:    ;; TODO: Does 80 need to be here or is it enough calling it "_sysCallhandler"?
 	sysCallHandlerMaster 80
+
+_processHandler:
+	pushStateSysCall
+	mov rax, rsp
+	
+	mov rdi, rax
+	call set_up_process
+
+	popStateSysCall
+	mov rsp, rax
+	iretq
 
 
 ;Zero Division Exception

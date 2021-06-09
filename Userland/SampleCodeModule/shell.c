@@ -86,10 +86,11 @@ void available(uint64_t reg, char moves) {
 static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support};
 
 static char get_command() {
-    int i;
-    for (i = 0; i < COMMANDS; i++) {
+    int i = 0;
+    while ( i < COMMANDS ) {
         if(strcmp(commands[i], buffer) == 0)
             return i;
+        i++;
     }
     return -1;
 }

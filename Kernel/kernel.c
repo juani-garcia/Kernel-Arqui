@@ -66,14 +66,14 @@ int main() {
 	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 
-	// Process p1 = {stackBase1, (uint64_t) sampleCodeModuleAddress, 0x0};
-	// Process p2 = {stackBase2, (uint64_t) sampleCodeModuleAddress, 0x0};
-	// load_processes(&p1, &p2);
-	// begin();
+	Process p1 = {stackBase1, (uint64_t) sampleCodeModuleAddress, 0x0};
+	Process p2 = {stackBase2, (uint64_t) sampleCodeModuleAddress, 0x0};
+	load_processes(&p1, &p2);
+	begin();
 
 	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
+	//ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	//ncNewline();
 	ncPrint("[Finished]");
 	ncNewline();
 

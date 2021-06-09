@@ -6,7 +6,8 @@
 
 char buffer[MAX_BUFFER_LENGTH] = {0};
 
-char get_command();
+int get_com();
+int get_correct_command();
 void command_listener();
 void ayuda(void);
 void inforeg(void);
@@ -83,17 +84,13 @@ void available(uint64_t reg, char moves) {
             printf("no.\n");
 }
 
-static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support};
-
-char get_command() {
-    //printf(buffer);
-    //putchar('A');
-    // int i = 0;
-    // while ( i < COMMANDS ) {
-    //     if(strcmp(commands[i], buffer) == 0)
-    //         return i;
-    //     i++;
-    // }
+int get_com() {
+     int i = 0;
+     while ( i < COMMANDS ) {
+         if(strcmp(commands[i], buffer) == 0)
+             return i;
+         i++;
+     }
     return -1;
 }
 
@@ -102,7 +99,7 @@ void command_listener() {
     unsigned char c;
     while((c = getchar()) != '\n') {
         if(c == '\t'){
-            //change_shell();
+            change_shell();
         } else if (c == '\b' && i>0) {
             putchar(c);
             i--;
@@ -116,15 +113,26 @@ void command_listener() {
     buffer[i] = 0;
 }
 
+int get_correct_command(){
+    int idx = 0;
+    while(idx < COMMANDS){
+        if(strcmp(commands[idx], buffer) == 0)
+            return idx;
+        idx++;
+    }
+    return -1;
+}
+
+static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support};
 
 int run_shell() {
     printf("\n");
     while(1) {
         printf(">> ");
         command_listener();
-        ayuda();
+        //ayuda();
         //printf(buffer);
-        int idx = get_command();
+        int idx = get_correct_command();
         if(idx == -1)
             printf("No such command. Run command help to see all commands.\n");
         else {

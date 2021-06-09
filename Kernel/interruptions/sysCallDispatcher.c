@@ -5,6 +5,7 @@
 #include <lib.h>
 #include <interrupts.h>
 #include <cpu_support.h>
+#include <process.h>
 
 typedef uint64_t (*PSysCall)(uint64_t, uint64_t, uint64_t);
 
@@ -12,8 +13,9 @@ static long write(unsigned int fd, const char * buf, size_t count); // TODO: Fix
 static long read(unsigned int fd, char * buf, size_t count);
 static uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 static void info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx);
+void swap_shell();
 
-static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support, (PSysCall)&info_reg};
+static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support, (PSysCall)&info_reg, (PSysCall)&swap_shell};
 
 long write(unsigned int fd, const char * buf, size_t count) {
     if (buf == NULL)
@@ -46,6 +48,10 @@ void info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx){
 
 uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     return _cpuid_support();
+}
+
+void swap_shell(){
+    switch_process();
 }
 
 

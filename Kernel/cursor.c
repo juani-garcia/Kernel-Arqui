@@ -21,9 +21,9 @@ uint16_t getY(Pcursor cursor) {
 }
 
 void setX(Pcursor cursor, uint16_t x){
-    cursor->x = x + curr_process.offset_x;
+    cursor->x = x;
 }
 
 void setY(Pcursor cursor, uint16_t y){
-    cursor->y = y + curr_process.offset_y;
+    cursor->y = y;
 }

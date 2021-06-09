@@ -50,7 +50,7 @@ uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     return _cpuid_support();
 }
 
-void swap_shell(){
+void swap_shell(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t rax){
     switch_process();
 }
 

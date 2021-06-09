@@ -97,7 +97,10 @@ static char get_command() {
 static void command_listener() {
     int i = 0;
     unsigned char c;
-    while((c = getchar()) != '\n' && c != '\t') {
+    while((c = getchar()) != '\n') {
+        if(c == '\t'){
+            change_shell();
+        }
         if (c == '\b' && i>0) {
             putchar(c);
             i--;
@@ -119,7 +122,7 @@ int run_shell() {
         command_listener();
         int idx = get_command();
         if(idx == -1)
-            printf("No such command. Run command \n>> help\n to see all commands.\n");
+            printf("No such command. Run command help to see all commands.\n");
         else {
            Pcommands command = command_codes[idx];
            command();

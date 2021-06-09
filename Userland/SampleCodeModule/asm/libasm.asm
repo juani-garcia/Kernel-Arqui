@@ -1,4 +1,4 @@
-GLOBAL print, read, try_catch_ud, check_cpuid_support, get_cpuid_info, get_info_reg
+GLOBAL print, read, try_catch_ud, check_cpuid_support, get_cpuid_info, get_info_reg, change_shell
 
 section .text
 
@@ -6,7 +6,7 @@ print:
     push rbp
     mov rbp, rsp
     
-    mov rax, 1
+    mov rax, 0x01
     int 80h
 
     mov rsp, rbp
@@ -39,7 +39,7 @@ check_cpuid_support:
     push rbp
     mov rbp, rsp
 
-    mov rax, 2
+    mov rax, 0x02
     int 80h
 
     mov rsp, rbp
@@ -67,7 +67,19 @@ get_info_reg:
     push rbp
     mov rbp, rsp
 
-    mov rax, 3
+    mov rax, 0x03
+    int 80h
+
+    mov rsp, rbp
+    pop rbp
+
+    ret
+
+change_shell:
+    push rbp
+    mov rbp, rsp
+
+    mov rax, 0x04
     int 80h
 
     mov rsp, rbp

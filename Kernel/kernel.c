@@ -65,18 +65,15 @@ int main() {
 	ncPrint("  Sample code module at 0x");
 	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
+
 	Process p1, p2;
 	p1.stack_base = stackBase1; p1.ip = (uint64_t) sampleCodeModuleAddress; p1.sp = 0;
 	p1.stack_base = stackBase2; p2.ip = (uint64_t) sampleCodeModuleAddress; p2.sp = 0;
 	load_processes(&p1, &p2);
-	ncPrint("  Calling the sample code module returned: ");
 	begin();
-	// ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	init_process(0x600000, (EntryPoint)sampleCodeModuleAddress);
-	ncNewline();
+
 	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
+	//ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	ncNewline();
 	ncPrint("[Finished]");
 	ncNewline();

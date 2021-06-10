@@ -70,10 +70,10 @@ int main() {
 	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 
-	begin();
+	//begin();
 
 	ncPrint("  Calling the sample code module returned: ");
-	//ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
+	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	//ncNewline();
 	ncPrint("[Finished]");
 	ncNewline();

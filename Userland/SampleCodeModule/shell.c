@@ -173,7 +173,7 @@ int run_shell() {
     char buffer[MAX_BUFFER_LENGTH] = {0};
     while(1) {
         printf(">> ");
-        command_listener(buffer);
+        dummy(buffer);
         int idx = get_comm(buffer);
         if(idx == -1)
             printf("No such command. Run command \"ayuda\" to see all commands.\n");

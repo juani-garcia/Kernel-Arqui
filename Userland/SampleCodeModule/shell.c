@@ -216,7 +216,7 @@ int run_shell() {
     while(1) {
         printf(">> ");
         dummy(buffer);
-        int idx = get_comm(buffer);
+        int idx = get_correct_command(buffer);
         if(idx == -1)
             printf("No such command. Run command \"ayuda\" to see all commands.\n");
         else {

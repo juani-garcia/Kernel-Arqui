@@ -1,5 +1,4 @@
-OUTPUT_FORMAT("binary")
-STARTUP(_loader.o)
+ENTRY(_start)
 SECTIONS
 {
 	.text 0x400000 :

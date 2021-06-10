@@ -20,13 +20,14 @@ long write(unsigned int fd, const char * buf, size_t count) {
     if (buf == NULL)
         return -1;
     int i;
+    uint32_t front = fd == STDERR ? RED : WHITE;
     for(i = 0; buf[i] && i < count; i++){
         if (buf[i] == '\n')     // TODO: idk why this creates an exception.
             ncNewline();
         else if (buf[i] == '\b')
             ncErase(1);
         else
-            ncPrintCharAtt(buf[i], WHITE, BLACK);
+            ncPrintCharAtt(buf[i], front, BLACK);
     }
     return i == 0? -1 : i;  // TODO: see if this return value is valid. Or should we send codes?
 }

@@ -84,7 +84,6 @@ get_info_reg:
 
     mov rsp, rbp
     pop rbp
-
     ret
 
 change_shell:

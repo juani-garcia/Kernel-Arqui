@@ -82,11 +82,52 @@ void available(uint64_t reg, char moves) {
         printf("no.\n");
 }
 
+uint64_t pow(uint64_t a, uint64_t b) {
+    uint64_t aux=1;
+    while (b != 0) {
+        aux *= a; b--;
+    }
+    return aux;
+}
+
 void printmem() {
-    printf("Memory at 0x400000: ");
-    char buf[64] = {0};
-    memdump(buf, (uint8_t *)0x400000);
-    printf(buf);
+    printf("Memory dump at : 0x");
+    char buf[17]={0};
+    int i = 0;
+    char c;
+    while((c = getchar()) != '\n' && i < 16) {
+        if(c == '\t') {
+            change_shell();
+        } else if (c == '\b' && i>0) {
+            putchar(c);
+            i--;
+        } else if (c != '\b') {
+            putchar(buf[i++] = c);
+        }
+    }
+    buf[i]=0;
+    putchar('\n');
+    uint64_t pos=0, aux, len = i;
+    for(i=0; buf[i]!='\0'; i++) {
+        if(buf[i]>='0' && buf[i]<='9') {
+            aux = buf[i] - 48;
+        }
+        else if(buf[i]>='a' && buf[i]<='f') {
+            aux = buf[i] - 97 + 10;
+        }
+        else if(buf[i]>='A' && buf[i]<='F') {
+            aux = buf[i] - 65 + 10;
+        } else {
+            printf("Wrong value.\n"); 
+            return;
+        }
+
+        pos += aux * pow(16, len);
+        len--;
+    }
+    char mem[64] = {0};
+    memdump(mem, (uint8_t *)pos);
+    printf(mem);
     printf("\n");
 }
 

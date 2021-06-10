@@ -35,8 +35,8 @@ long read(unsigned int fd, char * buf, size_t count) {
     // TODO: What could we use fd for¿?
     long read_count = -1;
     while ( read_count == -1 ) {
-        read_count = copy_from_buffer(buf, count); 
-        _hlt();
+        if ((read_count = copy_from_buffer(buf, count)) == -1)
+            _hlt();
     }
     return read_count;
 }

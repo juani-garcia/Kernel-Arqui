@@ -20,8 +20,9 @@ static void exception(char * msg, uint8_t len) {
     print(STDERR, "Press enter to continue...", 26);
     uint8_t sc;
     do{
-        sc = kbRead();
-    } while(sc != 0x1C);
+        if (copy_from_buffer(&sc,1)==-1) 
+            _hlt();
+    } while(sc != '\n');
     restart_process();
     
 }

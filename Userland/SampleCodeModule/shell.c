@@ -1,23 +1,14 @@
 #include <lib.h>
 #include <shell.h>
 #include <cpuid.h>
-#define COMMANDS 5
+#define COMMANDS 7
 #define MAX_BUFFER_LENGTH 256
 
-int get_com(char * buffer);
-int get_correct_command(char * buffer);
-void command_listener(char * buffer);
-void ayuda(void);
-void inforeg(void);
-void available(uint64_t reg, char moves);
-void features_support(void);
-void wrongop(void);
-void zerodiv(void);
 
 typedef void (*Pcommands)(void);
 
 // TODO: should be compared with strcmp
-static char * commands[COMMANDS] = {"ayuda", "inforeg", "support", "zerodiv", "wrongop"};
+char * commands[COMMANDS] = {"ayuda", "inforeg", "support", "zerodiv", "wrongop", "fechayhora", "printmem"};
 
 // TODO: implement printf along with scanf, putChar and getChar in order for this functionality to work
 void ayuda() {
@@ -71,7 +62,11 @@ void features_support(){
         printf("vpclmulqdq support: ");
         available(ecx, 10);
         printf("vaesni support: ");
-        available(ebx, 0000000000000000000); // TODO
+        if(get_vaesni_info()){
+            printf("yes.\n");
+        } else {
+            printf("no.\n");
+        }
 
     } else {
         printf("no.\n");
@@ -86,17 +81,44 @@ void available(uint64_t reg, char moves) {
         printf("no.\n");
 }
 
-int get_com(char * buffer) {
-     int i = 0;
-     while ( i < COMMANDS ) {
-         if(strcmp(commands[i], buffer) == 0)
-             return i;
-         i++;
-     }
+void printmem() {
+    printf("Memory at 0x400000: ");
+    char buf[64] = {0};
+    memdump(buf, (uint8_t *)0x400000);
+    printf(buf);
+    printf("\n");
+}
+
+int get_comm(char * buffer){
+    int idx = 0;
+    while(idx < COMMANDS){
+        if(strcmp(commands[idx], buffer) == 0)
+            return idx;
+        idx++;
+    }
     return -1;
 }
 
 void command_listener(char * buffer) {
+    int i = 0;
+    unsigned char c;
+    while((c = getchar()) != '\n') {
+        if(c == '\t'){
+            change_shell();
+        } else if (c == '\b' && i>0) {
+            putchar(c);
+            i--;
+        } else if (c != '\b') {
+            putchar(buffer[i++] = c);
+        }
+    }
+    if (c == '\n') {
+        putchar(c);
+    }
+    buffer[i] = 0;
+}
+
+void dummy(char * buffer) {
     int i = 0;
     unsigned char c;
     while((c = getchar()) != '\n') {
@@ -125,8 +147,6 @@ int get_correct_command(char * buffer){
     return -1;
 }
 
-static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support, &zerodiv, &wrongop};
-
 void zerodiv(){
     try_catch_zerodiv();
 }
@@ -135,15 +155,28 @@ void wrongop(){
     try_catch_ud();
 }
 
+void fechayhora(){
+    char timebuf[9];
+    char datebuf[9];
+    get_date_time(datebuf, timebuf);
+    printf("Time: ");
+    printf(timebuf);
+    printf(" (UTC) \nDate: ");
+    printf(datebuf);
+    printf("\n");
+}
+
+Pcommands command_codes[] = {&ayuda, &inforeg, &features_support, &zerodiv, &wrongop, &fechayhora, &printmem};
+
 int run_shell() {
     printf("\n");
     char buffer[MAX_BUFFER_LENGTH] = {0};
     while(1) {
         printf(">> ");
         command_listener(buffer);
-        int idx = get_correct_command(buffer);
+        int idx = get_comm(buffer);
         if(idx == -1)
-            printf("No such command. Run command help to see all commands.\n");
+            printf("No such command. Run command \"ayuda\" to see all commands.\n");
         else {
            Pcommands command = command_codes[idx];
            command();

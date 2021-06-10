@@ -20,5 +20,8 @@ void putchar(char c);
 char check_cpuid_support(void);
 void get_cpuid_info(uint32_t * ecx, uint32_t * edx, uint32_t * ebx);
 void get_info_reg(void);
+uint32_t get_vaesni_info(void);
+void get_date_time(char * datebuf, char * timebuf);
+void memdump(char * buf, uint8_t *  dir);
 
 #endif

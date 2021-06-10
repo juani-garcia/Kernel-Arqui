@@ -6,6 +6,7 @@
 
 
 typedef void (*Pcommands)(void);
+void fechayhora_2();
 
 // TODO: should be compared with strcmp
 char * commands[COMMANDS] = {"ayuda", "inforeg", "support", "zerodiv", "wrongop", "fechayhora", "printmem"};
@@ -166,7 +167,7 @@ void fechayhora(){
     printf("\n");
 }
 
-Pcommands command_codes[] = {&ayuda, &inforeg, &features_support, &zerodiv, &wrongop, &fechayhora, &printmem};
+Pcommands command_codes[] = {&ayuda, &inforeg, &features_support, &zerodiv, &wrongop, &fechayhora_2, &printmem};
 
 int run_shell() {
     printf("\n");
@@ -184,3 +185,16 @@ int run_shell() {
     }
     return 0; // TODO: Manage what we return.
 }
+
+
+void fechayhora_2(){
+    char timebuf[9];
+    char datebuf[9];
+    get_date_time(datebuf, timebuf);
+    printf("Time: ");
+    printf(timebuf);
+    printf(" (UTC) \nDate: ");
+    printf(datebuf);
+    printf("\n");
+}
+

@@ -70,16 +70,12 @@ int main() {
 	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 
-	//begin();
-
 	ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	//ncNewline();
 	ncPrint("[Finished]");
 	ncNewline();
 
 	ncNewline();
-	//show_registers();
 	
 	ncNewline();
 	char date[9] = {0};

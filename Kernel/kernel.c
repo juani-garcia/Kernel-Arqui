@@ -70,6 +70,8 @@ int main() {
 	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 
+	begin();
+
 	ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	ncPrint("[Finished]");

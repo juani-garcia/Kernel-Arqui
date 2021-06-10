@@ -1,4 +1,4 @@
-GLOBAL print, read, try_catch_ud, check_cpuid_support, get_cpuid_info, get_info_reg, change_shell
+GLOBAL print, read, try_catch_ud, check_cpuid_support, get_cpuid_info, get_info_reg, change_shell, try_catch_zerodiv
 
 section .text
 
@@ -30,6 +30,18 @@ try_catch_ud:
     mov rbp, rsp
 
     UD2
+
+    mov rsp, rbp
+    pop rbp
+    ret
+
+try_catch_zerodiv:
+    push rbp
+    mov rbp, rsp
+
+    mov rdx, 1
+    mov rax, 0
+    div rax
 
     mov rsp, rbp
     pop rbp

@@ -20,54 +20,77 @@ void printf(const char * str) {
     print(STDOUT, str, strlen(str));
 }
 
-/* 
-int myprintf (char * str, ...)
-{
-	va_list vl;
-	int i = 0, j=0;
-		char buff[100]={0}, tmp[20];
-		va_start( vl, str ); 
-		while (str && str[i])
-		{
-		  	if(str[i] == '%')
-		  	{
- 		    i++;
- 		    switch (str[i]) 
- 		    {
-	 		    case 'c': 
-	 		    {
-	 		        buff[j] = (char)va_arg( vl, int );
-	 		        j++;
-	 		        break;
-	 		    }
-	 		    case 'd': 
-	 		    {
-	 		        itoa(va_arg( vl, int ), tmp, 10);
-	 		        strcpy(&buff[j], tmp);
-	 		        j += strlen(tmp);
-		           break;
-		        }
-		        case 'x': 
-		        {
-		           itoa(va_arg( vl, int ), tmp, 16);
-		           strcpy(&buff[j], tmp);
-		           j += strlen(tmp);
-		           break;
-		        }
-        	}
-     	} 
-     	else 
-	    {
-	       	buff[j] =str[i];
-	       	j++;
-	    }
-	    i++;
-	} 
-    fwrite(buff, j, 1, stdout); 
-    va_end(vl);
-    return j;
- } */
+/* void Myprintf(char* format,...) 
+{ 
+    char *traverse; 
+    unsigned int i; 
+    char *s; 
 
+    //Module 1: Initializing Myprintf's arguments 
+    va_list arg; 
+    va_start(arg, format); 
+
+    for(traverse = format; *traverse != '\0'; traverse++) 
+    { 
+        while( *traverse != '%' ) 
+        { 
+            putchar(*traverse);
+            traverse++; 
+        } 
+
+        traverse++; 
+
+        //Module 2: Fetching and executing arguments
+        switch(*traverse) 
+        { 
+            case 'c' : i = va_arg(arg,int);     //Fetch char argument
+                        putchar(i);
+                        break; 
+
+            case 'd' : i = va_arg(arg,int);         //Fetch Decimal/Integer argument
+                        if(i<0) 
+                        { 
+                            i = -i;
+                            putchar('-'); 
+                        } 
+                        puts(convert(i,10));
+                        break; 
+
+            case 'o': i = va_arg(arg,unsigned int); //Fetch Octal representation
+                        puts(convert(i,8));
+                        break; 
+
+            case 's': s = va_arg(arg,char *);       //Fetch string
+                        puts(s); 
+                        break; 
+
+            case 'x': i = va_arg(arg,unsigned int); //Fetch Hexadecimal representation
+                        puts(convert(i,16));
+                        break; 
+        }   
+    } 
+
+    //Module 3: Closing argument list to necessary clean-up
+    va_end(arg); 
+} 
+
+char *convert(unsigned int num, int base) 
+{ 
+    static char Representation[]= "0123456789ABCDEF";
+    static char buf[50]; 
+    char *ptr; 
+
+    ptr = &buf[49]; 
+    *ptr = '\0'; 
+
+    do 
+    { 
+        *--ptr = Representation[num%base]; 
+        num /= base; 
+    }while(num != 0); 
+
+    return(ptr); 
+} */
 
 int getchar() {
     char c = 0;

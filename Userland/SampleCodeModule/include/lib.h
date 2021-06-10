@@ -11,6 +11,7 @@
 void print(unsigned int fd, const char * buf, size_t count);
 long read(unsigned int fd, char * buf, size_t count);
 void try_catch_ud(void);
+void try_catch_zerodiv(void);
 int strlen(const char * str);
 int strcmp( char * str1, char * str2);
 void printf(const char * str);

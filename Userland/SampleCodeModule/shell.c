@@ -1,7 +1,7 @@
 #include <lib.h>
 #include <shell.h>
 #include <cpuid.h>
-#define COMMANDS 4
+#define COMMANDS 5
 #define MAX_BUFFER_LENGTH 256
 
 char buffer[MAX_BUFFER_LENGTH] = {0};
@@ -13,20 +13,24 @@ void ayuda(void);
 void inforeg(void);
 void available(uint64_t reg, char moves);
 void features_support(void);
+void wrongop(void);
+void zerodiv(void);
 
 typedef void (*Pcommands)(void);
 
 // TODO: should be compared with strcmp
-static char * commands[COMMANDS] = {"ayuda", "inforeg", "support"};
+static char * commands[COMMANDS] = {"ayuda", "inforeg", "support", "zerodiv", "wrongop"};
 
 // TODO: implement printf along with scanf, putChar and getChar in order for this functionality to work
 void ayuda() {
-    printf("Los comandos disponibles son los siguientes:\n\n");
+    printf("\nLos comandos disponibles son los siguientes:\n\n");
     printf("inforeg       -imprime en pantalla el valor de todos los registros.\n");
     printf("printmem      -realiza un volcado de memoria de 32 bytes a partir de la\n");
     printf("               direccion que se recibe como argumento.\n");
     printf("fechayhora    -desplega en pantalla el dia y la hora del sistema.\n");
     printf("ayuda         -muestra todos los comandos disponibles.\n");
+    printf("zerodiv       -lanza una excepcion de codigo 00. Division by zero.\n");
+    printf("wrongop       -lanza una excepcion de codigo 06. Wrong Operand Code.\n");
 }
 
 // TODO: after merging, this function should call show_registers
@@ -123,7 +127,15 @@ int get_correct_command(){
     return -1;
 }
 
-static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support};
+static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support, &zerodiv, &wrongop};
+
+void zerodiv(){
+    try_catch_zerodiv();
+}
+
+void wrongop(){
+    try_catch_ud();
+}
 
 int run_shell() {
     printf("\n");

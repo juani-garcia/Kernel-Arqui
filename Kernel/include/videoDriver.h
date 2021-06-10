@@ -49,5 +49,6 @@ struct vbe_mode_info_structure {
 static struct vbe_mode_info_structure * screen = (struct vbe_mode_info_structure *)SCREEN;
 
 void draw_pixel(uint16_t x, uint16_t y, uint32_t color);
+void split();
 
 #endif

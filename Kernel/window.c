@@ -1,4 +1,4 @@
-#include <cursor.h>
+#include <window.h>
 #include <process.h>
 
 typedef struct cursor {

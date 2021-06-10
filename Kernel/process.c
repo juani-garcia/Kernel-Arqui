@@ -13,14 +13,6 @@ void load_processes(ProcessPtr p1, ProcessPtr p2) {
     processes[1]->sp = init_process(processes[1]->stack_base, processes[1]->ip);
 }
 
-// void switch_process() {
-//     processes[activeProcess]->sp = get_rsp();
-//     activeProcess = 1 - activeProcess;
-//     set_rsp(processes[activeProcess]->sp);
-//     ncPrint("Going to process "); ncPrintDec(activeProcess);
-//     ncNewline();
-// }
-
 uint64_t set_up_process(uint64_t rsp) {
     processes[activeProcess]->sp = rsp;
     activeProcess = 1 - activeProcess;
@@ -31,4 +23,12 @@ uint64_t set_up_process(uint64_t rsp) {
 
 void begin() {
     if(processes[0] != 0) run_process(processes[0]->sp);
+}
+
+void restart_process(){
+    processes[activeProcess]->sp = init_process(processes[activeProcess]->stack_base, processes[activeProcess]->ip);
+}
+
+uint64_t get_current_rsp(){
+    return processes[activeProcess]->sp;
 }

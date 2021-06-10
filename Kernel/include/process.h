@@ -18,8 +18,7 @@ typedef struct Process * ProcessPtr;
 static ProcessPtr processes[2] = {0, 0};
 
 uint64_t init_process(uint64_t stack_base, uint64_t rip);
-uint64_t get_rsp();
-void set_rsp(uint64_t rsp);
+uint64_t get_current_rsp();
 void run_process(uint64_t rsp);
 
 void load_processes(ProcessPtr p1, ProcessPtr p2);
@@ -27,6 +26,9 @@ void reboot_process(uint8_t id);
 
 uint64_t set_up_process(uint64_t rsp);
 void begin();
+
+void restart_process();
+
 
 
 

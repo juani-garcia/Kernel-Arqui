@@ -1,16 +1,25 @@
 #include <naiveConsole.h>
 #include <font.h>
 #include <videoDriver.h>
-#include <cursor.h>
+#include <window.h>
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 static void scrollUp();
 static int numlen(uint64_t val);
 
 static char buffer[128] = { '0' };
+//static Window window;
 static Pcursor cursor;
 
+void split(){
+	uint16_t mid = screen->width/2;
+	for(uint16_t i = mid - 1; i < mid + 3; i++)
+		for(uint16_t j = 0; j < screen->height; j++)
+			draw_pixel(i, j, 0xFFFFFF);
+}
+
 void initScreen(void) {
+	split();
 	cursor = initCursor();
 }
 
@@ -29,13 +38,13 @@ void ncPrintChar(char character) {
 }
 
 void ncPrintCharAtt(char character, uint32_t frontColor, uint32_t backColor) {
-	if (getX(cursor) >= screen->width) {
-		setX(cursor, 0);
-		if (getY(cursor) >= screen->height - CHAR_HEIGHT) {
+	if (getX(&cursor) >= screen->width) {
+		setX(&cursor, 0);
+		if (getY(&cursor) >= screen->height - CHAR_HEIGHT) {
 			scrollUp();
 		} else {
-			uint16_t y = getY(cursor);
-			setY(cursor, y + CHAR_HEIGHT);
+			uint16_t y = getY(&cursor);
+			setY(&cursor, y + CHAR_HEIGHT);
 		}
 	}
 
@@ -43,13 +52,13 @@ void ncPrintCharAtt(char character, uint32_t frontColor, uint32_t backColor) {
 	for(int i = 0; i < CHAR_HEIGHT; i++) {
 		for(int j = 0; j < CHAR_WIDTH; j++) {
 			if(letter[i] & (1 << j))
-				draw_pixel(CHAR_WIDTH - 1 - j + getX(cursor), i + getY(cursor), frontColor);
+				draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), frontColor);
 			else
-				draw_pixel(CHAR_WIDTH - 1 - j + getX(cursor), i + getY(cursor), backColor);
+				draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), backColor);
 		}
 	}
-	uint16_t x = getX(cursor);
-	setX(cursor, x + CHAR_WIDTH);
+	uint16_t x = getX(&cursor);
+	setX(&cursor, x + CHAR_WIDTH);
 }
 
 void cpyPixel(int x_dst, int y_dst, int x_src, int y_src) {
@@ -72,17 +81,17 @@ void ncNewline() {
 	do {
 		for(int i = 0; i < CHAR_HEIGHT; i++) {
 			for(int j = 0; j < CHAR_WIDTH; j++) {
-					draw_pixel(CHAR_WIDTH - 1 - j + getX(cursor), i + getY(cursor), BLACK);
+					draw_pixel(CHAR_WIDTH - 1 - j + getX(&cursor), i + getY(&cursor), BLACK);
 			}
 		}
-		setX(cursor, getX(cursor) + CHAR_WIDTH);
-	}while((getX(cursor) < screen->width));
+		setX(&cursor, getX(&cursor) + CHAR_WIDTH);
+	}while((getX(&cursor) < screen->width));
 	
-	setX(cursor, 0);
-	if (getY(cursor) > screen->height - CHAR_HEIGHT) {
+	setX(&cursor, 0);
+	if (getY(&cursor) > screen->height - CHAR_HEIGHT) {
 		scrollUp();
 	}
-	setY(cursor, getY(cursor) + CHAR_HEIGHT);
+	setY(&cursor, getY(&cursor) + CHAR_HEIGHT);
 }
 
 void ncPrintDec(uint64_t value) {
@@ -108,8 +117,8 @@ void ncClear() {
 			draw_pixel(i, j, BLACK);
 		}
 	}
-	setX(cursor, 0);
-	setY(cursor, 0);
+	setX(&cursor, 0);
+	setY(&cursor, 0);
 }
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base) {
@@ -161,18 +170,18 @@ static int numlen(uint64_t val) {
 
 void ncErase(uint32_t amount) {
 	for (uint32_t c = 0; c < amount; c++) {
-		if (getX(cursor) == 0) {
-			if (getY(cursor) != 0) {
-				setY(cursor, getY(cursor) - CHAR_HEIGHT);
-				setX(cursor, screen->width - CHAR_WIDTH);
+		if (getX(&cursor) == 0) {
+			if (getY(&cursor) != 0) {
+				setY(&cursor, getY(&cursor) - CHAR_HEIGHT);
+				setX(&cursor, screen->width - CHAR_WIDTH);
 			} else {
 				return;
 			}
 		} else {
-			setX(cursor, getX(cursor) - CHAR_WIDTH);
+			setX(&cursor, getX(&cursor) - CHAR_WIDTH);
 		}
-		for (uint16_t x = getX(cursor); x < getX(cursor) + CHAR_WIDTH ; x++) {
-			for (uint16_t y = getY(cursor); y < getY(cursor) + CHAR_HEIGHT; y++){
+		for (uint16_t x = getX(&cursor); x < getX(&cursor) + CHAR_WIDTH ; x++) {
+			for (uint16_t y = getY(&cursor); y < getY(&cursor) + CHAR_HEIGHT; y++){
 				draw_pixel(x, y, BLACK);
 			}
 		}

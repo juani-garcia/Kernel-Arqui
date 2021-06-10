@@ -3,6 +3,7 @@
 #include <time.h>
 #include <keyboard.h>
 #include <naiveConsole.h>
+#include <process.h>
 #define STDERR 2
 
 typedef void (*PException)();
@@ -17,13 +18,12 @@ static void exception(char * msg, uint8_t len) {
     print(STDERR, msg, len);
     show_registers();
     print(STDERR, "Press enter to continue...", 26);
-    int elapsed = 0, actual = seconds_elapsed();
+    uint8_t sc;
     do{
-        _hlt();
-        elapsed = seconds_elapsed();
-    } while(actual + 5 >= elapsed);
-
-    // TODO: find a way to restart the process after the exc is called.
+        sc = kbRead();
+    } while(sc != 0x1C);
+    restart_process();
+    
 }
 
 static void int_00(void){
@@ -36,9 +36,6 @@ static void int_06(void){
 
 void exceptionDispatcher(int exception) {
     PException exc = exceptions[exception];
-    ncPrint("Voy a llamar a la excepcion numero ");
-    ncPrintHex(exception);
     ncNewline();
     if (exc != 0) exc();
-    return;
 }

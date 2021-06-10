@@ -9,7 +9,7 @@
 #include <time.h>
 #include <videoDriver.h>
 #include <process.h>
-#include <cursor.h>
+#include <window.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -57,6 +57,7 @@ void * initializeKernelBinary()
 
 int main() {
 	initScreen();
+	split();
 	load_idt();
 	ncPrintAtt("Arquitectura de las Computadoras", WHITE, BLACK);
 	ncNewline();

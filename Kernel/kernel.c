@@ -59,6 +59,9 @@ int main() {
 	initScreen();
 	split();
 	load_idt();
+	Process p1 = {stackBase1, (uint64_t) sampleCodeModuleAddress, 0x0};
+	Process p2 = {stackBase2, (uint64_t) sampleCodeModuleAddress, 0x0};
+	load_processes(&p1, &p2);
 	ncPrintAtt("Arquitectura de las Computadoras", WHITE, BLACK);
 	ncNewline();
 	ncPrint("[Kernel Main]");
@@ -67,9 +70,6 @@ int main() {
 	ncPrintHex((EntryPoint)sampleCodeModuleAddress);
 	ncNewline();
 
-	Process p1 = {stackBase1, (uint64_t) sampleCodeModuleAddress, 0x0};
-	Process p2 = {stackBase2, (uint64_t) sampleCodeModuleAddress, 0x0};
-	load_processes(&p1, &p2);
 	begin();
 
 	ncPrint("  Calling the sample code module returned: ");

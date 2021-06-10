@@ -4,11 +4,9 @@
 #define COMMANDS 5
 #define MAX_BUFFER_LENGTH 256
 
-char buffer[MAX_BUFFER_LENGTH] = {0};
-
-int get_com();
-int get_correct_command();
-void command_listener();
+int get_com(char * buffer);
+int get_correct_command(char * buffer);
+void command_listener(char * buffer);
 void ayuda(void);
 void inforeg(void);
 void available(uint64_t reg, char moves);
@@ -42,38 +40,38 @@ void features_support(){
     printf("cpuid support: ");
     if(check_cpuid_support()){
         printf("yes.\n");
-        uint32_t f_arg = 1, s_arg = 1, t_arg = 0;
-        get_cpuid_info(&f_arg, &s_arg, &t_arg);
+        uint32_t ecx = 1, edx, ebx;
+        get_cpuid_info(&ecx, &edx, &ebx);
 
         printf("sse support: ");
-        available(s_arg, 25);
+        available(edx, 25);
         printf("sse2 support: ");
-        available(s_arg, 26);
+        available(edx, 26);
         printf("sse3 support: ");
-        available(f_arg, 0);
+        available(ecx, 0);
         printf("sse4.1 support: ");
-        available(f_arg, 19);
+        available(ecx, 19);
         printf("sse4.2 support: ");
-        available(f_arg, 20);
+        available(ecx, 20);
         printf("aesni support: ");
-        available(f_arg, 25);
+        available(ecx, 25);
         printf("pclmulqdq support: ");
-        available(f_arg, 1);
+        available(ecx, 1);
         printf("avx support: ");
-        available(f_arg, 28);
+        available(ecx, 28);
         printf("f16c support: ");
-        available(f_arg, 29);
+        available(ecx, 29);
         printf("fma support: ");
-        available(f_arg, 12);
+        available(ecx, 12);
 
-        f_arg = 7; s_arg = 0;
-        get_cpuid_info(&f_arg, &s_arg, &t_arg);
+        ecx = 7; edx = 0;
+        get_cpuid_info(&ecx, &edx, &ebx);
         printf("avx2 support: ");
-        available(t_arg, 6);
+        available(ebx, 6);
         printf("vpclmulqdq support: ");
-        available(f_arg, 10);
+        available(ecx, 10);
         printf("vaesni support: ");
-        available(t_arg, 0000000000000000000); // TODO
+        available(ebx, 0000000000000000000); // TODO
 
     } else {
         printf("no.\n");
@@ -83,12 +81,12 @@ void features_support(){
 
 void available(uint64_t reg, char moves) {
     if(((reg >> moves) & 0x01) == 1)
-            printf("yes.\n");
-        else
-            printf("no.\n");
+        printf("yes.\n");
+    else
+        printf("no.\n");
 }
 
-int get_com() {
+int get_com(char * buffer) {
      int i = 0;
      while ( i < COMMANDS ) {
          if(strcmp(commands[i], buffer) == 0)
@@ -98,7 +96,7 @@ int get_com() {
     return -1;
 }
 
-void command_listener() {
+void command_listener(char * buffer) {
     int i = 0;
     unsigned char c;
     while((c = getchar()) != '\n') {
@@ -117,7 +115,7 @@ void command_listener() {
     buffer[i] = 0;
 }
 
-int get_correct_command(){
+int get_correct_command(char * buffer){
     int idx = 0;
     while(idx < COMMANDS){
         if(strcmp(commands[idx], buffer) == 0)
@@ -139,12 +137,11 @@ void wrongop(){
 
 int run_shell() {
     printf("\n");
+    char buffer[MAX_BUFFER_LENGTH] = {0};
     while(1) {
         printf(">> ");
-        command_listener();
-        //ayuda();
-        //printf(buffer);
-        int idx = get_correct_command();
+        command_listener(buffer);
+        int idx = get_correct_command(buffer);
         if(idx == -1)
             printf("No such command. Run command help to see all commands.\n");
         else {

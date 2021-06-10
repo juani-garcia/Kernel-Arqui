@@ -15,7 +15,7 @@ typedef struct Process{
 } Process;
 
 typedef struct Process * ProcessPtr;
-static ProcessPtr processes[2] = {0, 0};
+static ProcessPtr processes[AMMOUNT_FDS] = {0, 0};
 
 uint64_t init_process(uint64_t stack_base, uint64_t rip);
 uint64_t get_current_rsp();
@@ -27,7 +27,10 @@ void reboot_process(uint8_t id);
 uint64_t set_up_process(uint64_t rsp);
 void begin();
 
-void restart_process();
+void restart_process(); // TODO: Check this func.
+
+uint8_t get_current_process();
+
 
 
 

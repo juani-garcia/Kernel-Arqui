@@ -42,6 +42,9 @@ extern ncNewline
 %endmacro
 
 show_registers:
+    push rbp
+    mov rbp, rsp
+    
     pushRegisters
     mov rdi, reg1
     call ncPrint
@@ -187,6 +190,8 @@ show_registers:
     call ncNewline
     popRegisters
 
+    mov rsp, rbp
+    pop rbp
     ret
 
 section .data

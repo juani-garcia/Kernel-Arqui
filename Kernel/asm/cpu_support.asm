@@ -3,6 +3,9 @@ GLOBAL _cpuid_support
 
 ;; el bit 21 de los rflags me determina si el procesador soporta la instruccion cpuid 
 _cpuid_support:
+	push rbp
+	mov rbp, rsp
+
     push rbx            ; guardo valores para conservarlos luego de retornar
     pushfq
     pop rax
@@ -19,9 +22,18 @@ _cpuid_support:
     jz no_cpuid         ; si el procesador cambió automaticamente el bit nro 21 a 0, dara distinto y salta (no cpuid support)
     pop rbx             ; devuelvo el valor de rbx
     mov rax, 1          ; valor de retorno 1
+    
+    mov rsp, rbp
+    pop rbp
     ret
 
 no_cpuid:
+	push rbp
+	mov rbp, rsp
+
     pop rbx
     mov rax, 0
+    
+    mov rsp, rbp
+    pop rbp
     ret

@@ -28,7 +28,3 @@ int getchar() {
 void putchar(char c) {
     print(STDOUT, &c, 1);
 }
-
-void scanf(char * buffer, int count){
-    read(STDIN, buffer, count);
-}

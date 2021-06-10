@@ -1,4 +1,4 @@
-ENTRY(_start)
+STARTUP(_loader.o)
 SECTIONS
 {
 	.text 0x400000 :

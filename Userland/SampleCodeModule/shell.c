@@ -115,7 +115,7 @@ void command_listener(char * buffer) {
     buffer[i] = 0;
 }
 
-int get_correct_command(char * buffer){
+/* int get_correct_command(char * buffer){
     int idx = 0;
     while(idx < COMMANDS){
         if(strcmp(commands[idx], buffer) == 0)
@@ -123,7 +123,7 @@ int get_correct_command(char * buffer){
         idx++;
     }
     return -1;
-}
+} */
 
 static Pcommands command_codes[] = {&ayuda, &inforeg, &features_support, &zerodiv, &wrongop};
 
@@ -141,7 +141,7 @@ int run_shell() {
     while(1) {
         printf(">> ");
         command_listener(buffer);
-        int idx = get_correct_command(buffer);
+        int idx = get_com(buffer);
         if(idx == -1)
             printf("No such command. Run command help to see all commands.\n");
         else {

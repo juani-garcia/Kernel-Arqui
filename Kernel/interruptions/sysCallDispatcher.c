@@ -54,13 +54,13 @@ uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
 }
 
 uint64_t mem_dump_32B(char * buf, uint8_t *  dir, uint64_t rdx) {
-    int value;
-    for (int i = 0; i < 32; i++) {
-        value = (*dir >> 4) & 0x0F;
-        buf[i] = value > 9 ? (value - 10) + 'A' : value + '0';
-        value = *dir & 0x0F;
-        buf[i+1] = value > 9 ? (value - 10) + 'A' : value + '0';
-        dir+=1;
+    uint8_t value;
+    for (int i = 0; i < 64; i+=2) {
+        value = (*(dir) & 0xF0) >> 4;
+        buf[i] = value > 9 ? (value - 10) + 'a' : value + '0';
+        value = *(dir) & 0x0F;
+        buf[i+1] = value > 9 ? (value - 10) + 'a' : value + '0';
+        dir += 1;
     }
     return 0;
 }

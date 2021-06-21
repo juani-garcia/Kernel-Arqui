@@ -13,7 +13,7 @@ long write(unsigned int fd, const char * buf, size_t count); // TODO: Fix long f
 long read(unsigned int fd, char * buf, size_t count);
 uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx);
 uint64_t info_reg(uint64_t rdi, uint64_t rsi, uint64_t rdx);
-uint64_t mem_dump_32B(char * buf, uint8_t * dir, uint64_t rdx);
+uint64_t mem_dump_32B(uint8_t * buf, uint8_t * dir, uint64_t rdx);
 uint64_t fecha_y_hora(char * datebuf, char * timebuf, uint64_t rdx);
 
 static PSysCall sysCalls[255] = {(PSysCall)&read, (PSysCall)&write, (PSysCall)&cpuid_support, (PSysCall)&info_reg, (PSysCall)&mem_dump_32B, (PSysCall)&fecha_y_hora};
@@ -53,16 +53,30 @@ uint64_t cpuid_support(uint64_t rdi, uint64_t rsi, uint64_t rdx) {
     return _cpuid_support();
 }
 
-uint64_t mem_dump_32B(char * buf, uint8_t *  dir, uint64_t rdx) {
+uint64_t mem_dump_32B(uint8_t * buf, uint8_t *  dir, uint64_t rdx) {
     uint8_t value;
-    for (int i = 0; i < 64; i+=2) {
-        value = (*(dir) & 0xF0) >> 4;
-        buf[i] = value > 9 ? (value - 10) + 'a' : value + '0';
+    int i = 0;
+    while (i < 64) {
         value = *(dir) & 0x0F;
-        buf[i+1] = value > 9 ? (value - 10) + 'a' : value + '0';
-        dir += 1;
+        buf[i+7] = value > 9 ? (value - 10) + 'A' : value + '0';
+        value = (*(dir) & 0xF0) >> 4;
+        buf[i+6] = value > 9 ? (value - 10) + 'A' : value + '0';
+        value = *(dir+1) & 0x0F;
+        buf[i+5] = value > 9 ? (value - 10) + 'A' : value + '0';
+        value = (*(dir+1) & 0xF0) >> 4;
+        buf[i+4] = value > 9 ? (value - 10) + 'A' : value + '0';
+        value = *(dir+2) & 0x0F;
+        buf[i+3] = value > 9 ? (value - 10) + 'A' : value + '0';
+        value = (*(dir+2) & 0xF0) >> 4;
+        buf[i+2] = value > 9 ? (value - 10) + 'A' : value + '0';
+        value = *(dir+3) & 0x0F;
+        buf[i+1] = value > 9 ? (value - 10) + 'A' : value + '0';
+        value = (*(dir+3) & 0xF0) >> 4;
+        buf[i] = value > 9 ? (value - 10) + 'A' : value + '0';
+        dir += 4; i += 8;
     }
-    return 0;
+    buf[i] = 0;
+    return i;
 }
 
 uint64_t fecha_y_hora(char * datebuf, char * timebuf, uint64_t rdx){
